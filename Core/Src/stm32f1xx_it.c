@@ -274,35 +274,7 @@ void TIM3_IRQHandler(void)
 void USART1_IRQHandler(void)
 {
   /* USER CODE BEGIN USART1_IRQn 0 */
-	tmp_sts = USART1->SR;
-	if ((tmp_sts & (1 << 0)) == (1 << 0)) {
-		huart1.ErrorCode = HAL_UART_ERROR_PE;
-		HJ_ClearUARTError(USART1);
-	} else if ((tmp_sts & (1 << 1)) == (1 << 1)) {
-		huart1.ErrorCode = HAL_UART_ERROR_FE;
-		HJ_ClearUARTError(USART1);
-	} else if ((tmp_sts & (1 << 2)) == (1 << 2)) {
-		huart1.ErrorCode = HAL_UART_ERROR_NE;
-		HJ_ClearUARTError(USART1);
-	} else if ((tmp_sts & (1 << 3)) == (1 << 3)) {
-		huart1.ErrorCode = HAL_UART_ERROR_ORE;
-		HJ_ClearUARTError(USART1);
-	} else if (USART1->SR & USART_SR_RXNE)    // Successful Reception of USART
-	{
-		uint8_t tmprx = USART1->DR;
-		if (tmprx != '\r') {
-			if (tmprx != '\n') {
-				ESP_InBuffer[ESPBufferCount] = tmprx;
-				ESPBufferCount++;
-			} else if (ESPBufferCount > 1)    //if \n received
-			{
-				ESP_InBuffer[ESPBufferCount] = 0;    // Put Terminator at end
-				ESPBufferCount = 0;
-				ParseTCP(ESP_InBuffer);
-			}
-		}
-	}
-	return;
+
   /* USER CODE END USART1_IRQn 0 */
   HAL_UART_IRQHandler(&huart1);
   /* USER CODE BEGIN USART1_IRQn 1 */

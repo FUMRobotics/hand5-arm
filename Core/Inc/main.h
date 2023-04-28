@@ -62,6 +62,26 @@ typedef struct {
 	float KD;			//Coefficient of D Term - User parameter
 	float LoopPeriod;    //time of PID Control Loop - Not used in here
 } PID;
+typedef enum
+{
+  noValue,
+  Thumb,
+  Index,
+  Middel,
+  Ring,
+  Pinky
+} HandFinger_Typedef;
+typedef enum
+{
+  STOP,
+  OPEN,
+  CLOSE
+} HandStatuse_Typedef;
+typedef struct
+{
+  HandStatuse_Typedef HandStatuse;
+  int Value;
+} HandState_Typedef;
 /* USER CODE END EM */
 
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
