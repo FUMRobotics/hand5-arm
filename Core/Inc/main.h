@@ -37,6 +37,7 @@ extern "C" {
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
 
+
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
@@ -46,42 +47,7 @@ extern "C" {
 
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
-typedef struct {
-	float FeedBack;    	// Feedback
-	float SetPoint;    	// SetPoint
-	float Error;		// Calculated Error
-	float DTerm;		// Calculated DTerm
-	float ITerm;		// Calculated ITerm
-	float I_Max;		//Maximum value of I Term - User parameter
-	float I_Min;		//Minimum value of I term - User parameter
-	float Out;			//Final PID Output
-	float Out_Max;		//Maximum value of Output - User parameter
-	float Out_Min;		//Minimum value of Output - User parameter
-	float KP;			//Coefficient of P Term - User parameter
-	float KI;			//Coefficient of I Term - User parameter
-	float KD;			//Coefficient of D Term - User parameter
-	float LoopPeriod;    //time of PID Control Loop - Not used in here
-} PID;
-typedef enum
-{
-  noValue,
-  Thumb,
-  Index,
-  Middel,
-  Ring,
-  Pinky
-} HandFinger_Typedef;
-typedef enum
-{
-  STOP,
-  OPEN,
-  CLOSE
-} HandStatuse_Typedef;
-typedef struct
-{
-  HandStatuse_Typedef HandStatuse;
-  int Value;
-} HandState_Typedef;
+
 /* USER CODE END EM */
 
 void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
@@ -90,16 +56,15 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
-void ParseTCP(uint8_t *txt);
-void SetMotor(uint8_t motor_num, uint8_t motor_dir, uint8_t motor_speed);
-void PID_Position_Defaults(PID *pid);
-void ApplyPIDToMotor(PID *pid, uint8_t DesiredMotor);
-void ComputePID(PID *PIDSystem);
-void ADC_Select_CH0(void);
-void ADC_Select_CH1(void);
-void ADC_Select_CH2(void);
-void ADC_Select_CH3(void);
-void ADC_Select_CH4(void);
+extern ADC_HandleTypeDef hadc1;
+extern DMA_HandleTypeDef hdma_adc1;
+
+extern TIM_HandleTypeDef htim1;
+extern TIM_HandleTypeDef htim2;
+extern TIM_HandleTypeDef htim3;
+
+
+extern UART_HandleTypeDef huart1;
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
