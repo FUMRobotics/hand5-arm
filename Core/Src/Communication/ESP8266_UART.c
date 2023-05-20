@@ -8,11 +8,14 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "main.h"
+#include "stm32f1xx.h"
 #include "ESP8266_UART.h"
 #include "jsmn.h"
 #include "string.h"
 #include "motorControl.h"
 #include "math.h"
+#include "eeprom.h"
+#include "core_cm3.h"
 /* USER CODE END Includes */
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
@@ -87,25 +90,6 @@ _Bool ProcessUartData(void)
 		{
 			HandFinger = Pinky;
 			i++;
-		}
-		else if (jsoneq(uartRecieveBuffer, &t[i], "Status") == 0)
-		{
-			char FingerStateBuffer[100] = {0,};
-			/* We may additionally check if the value is either "true" or "false" */
-			strncpy(FingerStateBuffer, uartRecieveBuffer + t[i + 1].start, t[i + 1].end - t[i + 1].start);
-			i++;
-			if (!strncmp("STOP", FingerStateBuffer, 4))
-			{
-				HandStruct[HandFinger - 1].HandStatuse = STOP;
-			}
-			if (!strncmp(FingerStateBuffer, "OPEN", 4))
-			{
-				HandStruct[HandFinger - 1].HandStatuse = OPEN;
-			}
-			if (!strncmp(FingerStateBuffer, "CLOSE", 5))
-			{
-				HandStruct[HandFinger - 1].HandStatuse = CLOSE;
-			}
 		}
 		else if (jsoneq(uartRecieveBuffer, &t[i], "Value") == 0)
 		{
@@ -204,12 +188,143 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 		if (uartRecieveBuffer[uartCounter] == '\n'&&uartRecieveBuffer[uartCounter-1] == '\r'&& uartRecieveBuffer[uartCounter-2] == '}') {
 			ProcessUartData();
 			uartCounter=-1;
-			for(uint16_t cleanCounter=0;cleanCounter<300;cleanCounter++)
+			for(uint16_t cleanCounter=0;cleanCounter<150;cleanCounter++)
 				uartRecieveBuffer[cleanCounter]=0;
 		}
 		uartCounter++;
 		HAL_UART_Receive_IT(&huart1, &RXuart, 1);
 
 	}
+}
+/*
+ * Function4--------------------------
+ */
+void calculate_Position_Fingers(void)
+{
+	if(Check_Position_Counter%2)
+	{
+		if(Last_Index_Position!=Index_Position)
+		{
+			//disable interrupts
+//			_Bool intrruptEnabled=(__get_PRIMASK()==0);
+//				__disable_irq();
+			Index_PercentPosition=((float)Index_Position/FINGER_INDEX_TRAVEL)*100;
+			Last_Index_Position=Index_Position;
+			HAL_FLASH_Unlock();
+			EE_WriteVariable(4, Index_Position);
+			HAL_FLASH_Lock();
+			//enable interrupts
+//			if(intrruptEnabled)
+//			{
+//				__enable_irq();
+//			}
+		}
+		if(Last_Middle_Position!=Middle_Position)
+		{
+			//disable interrupts
+//			_Bool intrruptEnabled=(__get_PRIMASK()==0);
+//				__disable_irq();
+			Middle_PercentPosition=((float)Middle_Position/FINGER_INDEX_TRAVEL)*100;
+			Last_Middle_Position=Middle_Position;
+			HAL_FLASH_Unlock();
+			EE_WriteVariable(3, Middle_Position);
+			HAL_FLASH_Lock();
+			//enable interrupts
+//			if(intrruptEnabled)
+//			{
+//				__enable_irq();
+//			}
+		}
+		if(Last_Ring_Position!=Ring_Position)
+		{
+			//disable interrupts
+//			_Bool intrruptEnabled=(__get_PRIMASK()==0);
+//				__disable_irq();
+			Ring_PercentPosition=((float)Ring_Position/FINGER_RING_TRAVEL)*100;
+			Last_Ring_Position=Ring_Position;
+			HAL_FLASH_Unlock();
+			EE_WriteVariable(2, Ring_Position);
+			HAL_FLASH_Lock();
+			//enable interrupts
+//			if(intrruptEnabled)
+//			{
+//				__enable_irq();
+//			}
+		}
+		if(Last_Pinky_Position!=Pinky_Position)
+		{
+			//disable interrupts
+//			_Bool intrruptEnabled=(__get_PRIMASK()==0);
+//				__disable_irq();
+			Pinky_PercentPosition=((float)Pinky_Position/FINGER_PINKY_TRAVEL)*100;
+			Last_Pinky_Position=Pinky_Position;
+			HAL_FLASH_Unlock();
+			EE_WriteVariable(1, Pinky_Position);
+			HAL_FLASH_Lock();
+			//enable interrupts
+//			if(intrruptEnabled)
+//			{
+//				__enable_irq();
+//			}
+		}
+	}
+	if(SaveData_EEprom)
+	{
+		//in future when hardware fix write in up if
+		//disable interrupts
+//		_Bool intrruptEnabled=(__get_PRIMASK()==0);
+//			__disable_irq();
+
+		HAL_FLASH_Unlock();
+		EE_WriteVariable(5, Thumb_Position);
+		HAL_FLASH_Lock();
+		SaveData_EEprom=0;
+		//enable interrupts
+//		if(intrruptEnabled)
+//		{
+//			__enable_irq();
+//		}
+	}
+}
+/*
+ * Function5--------------------------
+ */
+void Fetch_Position_Fingers(void)
+{
+	//disable interrupts
+//	_Bool intrruptEnabled=(__get_PRIMASK()==0);
+//	__disable_irq();
+
+	//INIT EEprom
+	HAL_FLASH_Unlock();
+	EE_Init();
+	EE_ReadVariable(1, &Pinky_Position);
+	EE_ReadVariable(2, &Ring_Position);
+	EE_ReadVariable(3, &Middle_Position);
+	EE_ReadVariable(4, &Index_Position);
+	EE_ReadVariable(5, &Thumb_Position);
+	HAL_FLASH_Lock();
+	//enable interrupts
+//	if(intrruptEnabled)
+//	{
+//		__enable_irq();
+//	}
+	if(Pinky_Position>FINGER_PINKY_TRAVEL)
+		Pinky_Position=0;
+	if(Ring_Position>FINGER_RING_TRAVEL)
+		Ring_Position=0;
+	if(Index_Position>FINGER_INDEX_TRAVEL)
+		Index_Position=0;
+	if(Middle_Position>FINGER_MIDDEL_TRAVEL)
+		Middle_Position=0;
+	Pinky_PercentPosition=((float)Pinky_Position/FINGER_PINKY_TRAVEL)*100;
+	Ring_PercentPosition=((float)Ring_Position/FINGER_RING_TRAVEL)*100;
+	Middle_PercentPosition=((float)Middle_Position/FINGER_INDEX_TRAVEL)*100;
+	Index_PercentPosition=((float)Index_Position/FINGER_INDEX_TRAVEL)*100;
+	Last_Index_Position=Index_Position;
+	Last_Middle_Position=Middle_Position;
+	Last_Pinky_Position=Pinky_Position;
+	Last_Ring_Position=Ring_Position;
+	Last_Thumb_Position=Thumb_Position;
 }
 /* USER CODE END PV */

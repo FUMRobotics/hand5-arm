@@ -7,14 +7,16 @@
 /*user include---------------------*/
 #include "main.h"
 #include "motorControl.h"
+#include "ESP8266_UART.h"
+#include "PID.h"
 /*END user include-----------------*/
-/* USER CODE BEGIN PV */
-uint8_t dummy = 0;
+	// Declare de new object
+qPID controller;
 //uart buffer
-char uartRecieveBuffer[300];
+char uartRecieveBuffer[150];
 uint16_t uartCounter = 0;
 uint8_t RXuart=0;
-HandState_Typedef HandStruct[5]={0,};
+volatile HandState_Typedef HandStruct[5]={0,};
 
 uint16_t DATA[5] = { 0 };
 _Bool SaveData_EEprom=0;
@@ -28,23 +30,40 @@ uint8_t GestureManualControl = 0;
 uint8_t ManualControlActive = 0;
 uint8_t ManualControlPWM = 99;
 
-uint16_t Thumb_Position = 0;
-uint16_t Index_Position = 0;
-uint16_t Middle_Position = 0;
-uint16_t Ring_Position = 0;
-uint16_t Pinky_Position = 0;
+volatile uint16_t Thumb_Position = 0;
+volatile uint16_t Index_Position = 0;
+volatile uint16_t Middle_Position = 0;
+volatile uint16_t Ring_Position = 0;
+volatile uint16_t Pinky_Position = 0;
+volatile uint16_t Last_Thumb_Position = 0;
+volatile uint16_t Last_Index_Position = 0;
+volatile uint16_t Last_Middle_Position = 0;
+volatile uint16_t Last_Ring_Position = 0;
+volatile uint16_t Last_Pinky_Position = 0;
 
-uint16_t Thumb_Position_SetPoint = 0;
-uint16_t Index_Position_SetPoint = 0;
-uint16_t Middle_Position_SetPoint = 0;
-uint16_t Ring_Position_SetPoint = 0;
-uint16_t Pinky_Position_SetPoint = 0;
+volatile uint32_t Check_Position_Counter=0;
+float Index_PercentPosition=0;
+float Middle_PercentPosition=0;
+float Ring_PercentPosition=0;
+float Pinky_PercentPosition=0;
+float Thumb_PercentPosition=0;
 
-uint8_t Thumb_LastDirection = 0;
-uint8_t Index_LastDirection = 0;
-uint8_t Middle_LastDirection = 0;
-uint8_t Ring_LastDirection = 0;
-uint8_t Pinky_LastDirection = 0;
+uint16_t Thumb_Position_Stack =0;
+uint16_t Index_Position_Stack =0;
+uint16_t Middle_Position_Stack=0;
+uint16_t Ring_Position_Stack  =0;
+uint16_t Pinky_Position_Stack =0;
+_Bool Thumb_Position_StackFlag =0;
+_Bool Index_Position_StackFlag =0;
+_Bool Middle_Position_StackFlag=0;
+_Bool Ring_Position_StackFlag  =0;
+_Bool Pinky_Position_StackFlag =0;
+
+volatile uint8_t Thumb_LastDirection = FINGER_Stop;
+volatile uint8_t Index_LastDirection = FINGER_Stop;
+volatile uint8_t Middle_LastDirection = FINGER_Stop;
+volatile uint8_t Ring_LastDirection = FINGER_Stop;
+volatile uint8_t Pinky_LastDirection = FINGER_Stop;
 float CRNT, SPD;
 
 // - Position PIDs
@@ -79,26 +98,28 @@ void init_motor_controller(void)
 	HAL_ADC_MspInit(&hadc1);
 	HAL_ADCEx_Calibration_Start(&hadc1);
 	HAL_ADC_Start_DMA(&hadc1, (uint32_t*) DATA, 5);
-	// --------------- Current PID to Default
-	PID_Position_Defaults(&Thumb_Current_PID);
-	PID_Position_Defaults(&Index_Current_PID);
-	PID_Position_Defaults(&Middle_Current_PID);
-	PID_Position_Defaults(&Ring_Current_PID);
-	PID_Position_Defaults(&Pinky_Current_PID);
-	// --------------  Position PID To Default
-	PID_Position_Defaults(&Thumb_Position_PID);
-	PID_Position_Defaults(&Index_Position_PID);
-	PID_Position_Defaults(&Middle_Position_PID);
-	PID_Position_Defaults(&Ring_Position_PID);
-	PID_Position_Defaults(&Pinky_Position_PID);
-	HAL_UART_Receive_IT(&huart1, &dummy, 1);
-	//	  	SetMotor(Index_Motor, FINGER_Open, 99);
-	//	  	SetMotor(Middle_Motor, FINGER_Open, 99);
-	//	  	SetMotor(Ring_Motor, FINGER_Open, 99);
-	//	  	SetMotor(Pinky_Motor, FINGER_Open, 99);
+	HAL_TIM_Base_Start_IT(&htim4);
 
-	CRNT = 2500;
-	SPD = 40;
+	// Configure settings
+	controller.AntiWindup = ENABLED;
+	controller.Bumpless = ENABLED;
+	// Configure de output limits for clamping
+	controller.OutputMax = 50.0;
+	controller.OutputMin = -50.0;
+	// Set the rate at the PID will run in seconds
+	controller.Ts = 3;
+	// More settings
+	controller.b = 1.0;
+	controller.c = 1.0;
+	// Init de controller
+	qPID_Init(&controller);
+	// Set the tunning constants
+	controller.K = 0.5;
+	controller.Ti = 1/0.02;
+	controller.Td = 1.0;
+	controller.Nd = 3.0;
+	// Set mode to auotmatic (otherwise it will be in manual mode)
+	controller.Mode = AUTOMATIC;
 }
 /*
  * Function2--------------------------
@@ -274,8 +295,8 @@ void ComputePID(PID *PIDSystem) {
 	PIDSystem->DTerm = PIDSystem->Error - PIDSystem->DTerm;    // deltaError
 	// ----- Output
 	PIDSystem->Out = (PIDSystem->KP * PIDSystem->Error)
-									+ (PIDSystem->KI * PIDSystem->ITerm)
-									+ (PIDSystem->KD * PIDSystem->DTerm);
+													+ (PIDSystem->KI * PIDSystem->ITerm)
+													+ (PIDSystem->KD * PIDSystem->DTerm);
 	if (PIDSystem->Out > PIDSystem->Out_Max)
 		PIDSystem->Out = PIDSystem->Out_Max;
 	if (PIDSystem->Out < PIDSystem->Out_Min)
@@ -285,11 +306,11 @@ void ComputePID(PID *PIDSystem) {
  * Function5--------------------------
  */
 void PID_Position_Defaults(PID *pid) {
-	pid->Out_Max = 99;
-	pid->Out_Min = -99;
-	pid->KP = 0;
-	pid->KI = 0;
-	pid->KD = 0;
+	pid->Out_Max = 100;
+	pid->Out_Min = 0;
+	pid->KP = 0.01;
+	pid->KI = 0.01;
+	pid->KD = 0.001;
 	pid->I_Max = 50;
 	pid->I_Min = -50;
 	pid->LoopPeriod = 0.01;
@@ -297,13 +318,278 @@ void PID_Position_Defaults(PID *pid) {
 /*
  * Function6--------------------------
  */
-void ApplyPIDToMotor(PID *pid, uint8_t DesiredMotor) {
-	if (pid->Out == 0) {
-		SetMotor(DesiredMotor, FINGER_Stop, pid->Out);
-	} else if (pid->Out > 0) {
-		SetMotor(DesiredMotor, FINGER_Open, pid->Out);
-	} else {
-		SetMotor(DesiredMotor, FINGER_Close, -pid->Out);
+void ApplyPIDToMotor(uint8_t DesiredMotor) {
+	float output=0;
+	switch (DesiredMotor) {
+	case Thumb_Motor:
+		output= qPID_Process(&controller, HandStruct[Thumb_Motor-1].Value, Thumb_PercentPosition);
+		if((uint8_t)Thumb_PercentPosition==HandStruct[Thumb_Motor-1].Value)
+		{
+			output=0;
+			SetMotor(Thumb_Motor, FINGER_Stop, output);
+			Thumb_LastDirection=FINGER_Stop;
+		}
+		if(output>0)
+		{
+			SetMotor(Thumb_Motor, FINGER_Open, output);
+			Thumb_LastDirection=FINGER_Open;
+		}else
+		{
+			SetMotor(Thumb_Motor, FINGER_Close, -output);
+			Thumb_LastDirection=FINGER_Close;
+		}
+		if(((Check_Position_Counter/10)/10)%2)
+		{
+			if(!Thumb_Position_StackFlag)
+			{
+				if(output!=0)
+				{
+					if(Thumb_Position_Stack!=Thumb_Position)
+					{
+						Thumb_Position_Stack=Thumb_Position;
+					}else
+					{
+						Thumb_Position_StackFlag=1;
+					}
+				}
+			}else
+			{
+				if(output!=0)
+				{
+					if(Thumb_Position_Stack!=Thumb_Position)
+					{
+						Thumb_Position_Stack=Thumb_Position;
+						Thumb_Position_StackFlag=0;
+					}else
+					{
+						output=0;
+						SetMotor(Thumb_Motor, FINGER_Stop, output);
+						Thumb_LastDirection=FINGER_Stop;
+						Thumb_Position_StackFlag=1;
+					}
+				}
+				else{
+					Thumb_Position_StackFlag=0;
+				}
+			}
+		}
+		break;
+	case Index_Motor:
+		 output = qPID_Process(&controller, HandStruct[Index_Motor-1].Value, Index_PercentPosition);
+		if((uint8_t)Index_PercentPosition==HandStruct[Index_Motor-1].Value)
+		{
+			output=0;
+			SetMotor(Index_Motor, FINGER_Stop, output);
+			Index_LastDirection=FINGER_Stop;
+		}
+		if(output>0)
+		{
+			SetMotor(Index_Motor, FINGER_Open, output);
+			Index_LastDirection=FINGER_Open;
+		}else
+		{
+			SetMotor(Index_Motor, FINGER_Close, -output);
+			Index_LastDirection=FINGER_Close;
+		}
+		if((Check_Position_Counter/10)%2)
+		{
+			if(!Index_Position_StackFlag)
+			{
+				if(output!=0)
+				{
+					if(Index_Position_Stack!=Index_Position)
+					{
+						Index_Position_Stack=Index_Position;
+					}else
+					{
+						Index_Position_StackFlag=1;
+					}
+				}
+			}else
+			{
+				if(output!=0)
+				{
+					if(Index_Position_Stack!=Index_Position)
+					{
+						Index_Position_Stack=Index_Position;
+						Index_Position_StackFlag=0;
+					}else
+					{
+						output=0;
+						SetMotor(Index_Motor, FINGER_Stop, output);
+						Index_LastDirection=FINGER_Stop;
+						Index_Position_StackFlag=1;
+					}
+				}
+				else{
+					Index_Position_StackFlag=0;
+				}
+			}
+		}
+		break;
+	case Middle_Motor:
+		output = qPID_Process(&controller, HandStruct[Middle_Motor-1].Value, Middle_PercentPosition);
+		if((uint8_t)Middle_PercentPosition==HandStruct[Middle_Motor-1].Value)
+		{
+			output=0;
+			SetMotor(Middle_Motor, FINGER_Stop, output);
+			Middle_LastDirection=FINGER_Stop;
+		}
+		if(output>0)
+		{
+			SetMotor(Middle_Motor, FINGER_Open, output);
+			Middle_LastDirection=FINGER_Open;
+		}else
+		{
+			SetMotor(Middle_Motor, FINGER_Close, -output);
+			Middle_LastDirection=FINGER_Close;
+		}
+		if((Check_Position_Counter/10)%2)
+		{
+			if(!Middle_Position_StackFlag)
+			{
+				if(output!=0)
+				{
+					if(Middle_Position_Stack!=Middle_Position)
+					{
+						Middle_Position_Stack=Middle_Position;
+					}else
+					{
+						Middle_Position_StackFlag=1;
+					}
+				}
+			}else
+			{
+				if(output!=0)
+				{
+					if(Middle_Position_Stack!=Middle_Position)
+					{
+						Middle_Position_Stack=Middle_Position;
+						Middle_Position_StackFlag=0;
+					}else
+					{
+						output=0;
+						SetMotor(Middle_Motor, FINGER_Stop, output);
+						Middle_LastDirection=FINGER_Stop;
+						Middle_Position_StackFlag=1;
+					}
+				}
+				else{
+					Middle_Position_StackFlag=0;
+				}
+			}
+		}
+
+		break;
+	case Ring_Motor:
+		output = qPID_Process(&controller, HandStruct[Ring_Motor-1].Value, Ring_PercentPosition);
+		if((uint8_t)Ring_PercentPosition==HandStruct[Ring_Motor-1].Value)
+		{
+			output=0;
+			SetMotor(Ring_Motor, FINGER_Stop, output);
+			Ring_LastDirection=FINGER_Stop;
+		}
+		if(output>0)
+		{
+			SetMotor(Ring_Motor, FINGER_Open, output);
+			Ring_LastDirection=FINGER_Open;
+		}else
+		{
+			SetMotor(Ring_Motor, FINGER_Close, -output);
+			Ring_LastDirection=FINGER_Close;
+		}
+		if((Check_Position_Counter/20)%2)
+		{
+			if(!Ring_Position_StackFlag)
+			{
+				if(output!=0)
+				{
+					if(Ring_Position_Stack!=Ring_Position)
+					{
+						Ring_Position_Stack=Ring_Position;
+					}else
+					{
+						Ring_Position_StackFlag=1;
+					}
+				}
+			}else
+			{
+				if(output!=0)
+				{
+					if(Ring_Position_Stack!=Ring_Position)
+					{
+						Ring_Position_Stack=Ring_Position;
+						Ring_Position_StackFlag=0;
+					}else
+					{
+						output=0;
+						SetMotor(Ring_Motor, FINGER_Stop, output);
+						Ring_LastDirection=FINGER_Stop;
+						Ring_Position_StackFlag=1;
+					}
+				}
+				else{
+					Ring_Position_StackFlag=0;
+				}
+			}
+		}
+		break;
+	case Pinky_Motor:
+		output = qPID_Process(&controller, HandStruct[Pinky_Motor-1].Value, Pinky_PercentPosition);
+		if((uint8_t)Pinky_PercentPosition==HandStruct[Pinky_Motor-1].Value)
+		{
+			output=0;
+			SetMotor(Pinky_Motor, FINGER_Stop, output);
+			Pinky_LastDirection=FINGER_Stop;
+		}
+		if(output>0)
+		{
+			SetMotor(Pinky_Motor, FINGER_Open, output);
+			Pinky_LastDirection=FINGER_Open;
+		}else
+		{
+			SetMotor(Pinky_Motor, FINGER_Close, -output);
+			Pinky_LastDirection=FINGER_Close;
+		}
+		if((Check_Position_Counter/10)%2)
+		{
+			if(!Pinky_Position_StackFlag)
+			{
+				if(output!=0)
+				{
+					if(Pinky_Position_Stack!=Pinky_Position)
+					{
+						Pinky_Position_Stack=Pinky_Position;
+					}else
+					{
+						Pinky_Position_StackFlag=1;
+					}
+				}
+			}else
+			{
+				if(output!=0)
+				{
+					if(Pinky_Position_Stack!=Pinky_Position)
+					{
+						Pinky_Position_Stack=Pinky_Position;
+						Pinky_Position_StackFlag=0;
+					}else
+					{
+						output=0;
+						SetMotor(Pinky_Motor, FINGER_Stop, output);
+						Pinky_LastDirection=FINGER_Stop;
+						Pinky_Position_StackFlag=1;
+					}
+				}
+				else{
+					Pinky_Position_StackFlag=0;
+				}
+			}
+		}
+
+		break;
+	default:
+		break;
 	}
 }
 /*END Functions--------------------*/
