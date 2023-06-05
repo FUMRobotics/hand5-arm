@@ -28,6 +28,9 @@
 #define FINGER_MIDDEL_TRAVEL  7100
 #define FINGER_RING_TRAVEL    6874
 #define FINGER_PINKY_TRAVEL   6590
+
+#define Max_Current_ADC       3500
+#define MIN_Current_ADC       800
 /* USER CODE END PD */
 
 /* Exported macro ------------------------------------------------------------*/
@@ -61,6 +64,21 @@ typedef struct
 {
   uint8_t Value;
 } HandState_Typedef;
+
+//typedef enum
+//{
+//	stop,
+//	open,
+//	close
+//}FingerOrder_Typedef;
+//typedef struct
+//{
+//	FingerOrder_Typedef Pinky;
+//	FingerOrder_Typedef Ring;
+//	FingerOrder_Typedef Middle;
+//	FingerOrder_Typedef Index;
+//	FingerOrder_Typedef Thumb;
+//}FingersOrder_Typedef;
 /* USER CODE END EM */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -69,7 +87,7 @@ typedef struct
 void init_motor_controller(void);
 void SetMotor(uint8_t motor_num, uint8_t motor_dir, uint8_t motor_speed);
 void PID_Position_Defaults(PID *pid);
-void ApplyPIDToMotor(uint8_t DesiredMotor);
+uint8_t ApplyPIDToMotor(uint8_t DesiredMotor);
 void ComputePID(PID *PIDSystem);
 void ADC_Select_CH0(void);
 void ADC_Select_CH1(void);
@@ -77,6 +95,7 @@ void ADC_Select_CH2(void);
 void ADC_Select_CH3(void);
 void ADC_Select_CH4(void);
 
+void Calculate_ADC_Current(void);
 /* USER CODE END PFP */
 
 /* Private function prototypes -----------------------------------------------*/

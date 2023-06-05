@@ -86,19 +86,22 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 		else
 			if (Pinky_LastDirection == FINGER_Close)
 				Pinky_Position--;
-	} else if (GPIO_Pin == Motor2_ENC_Pin) {
+	}
+	if (GPIO_Pin == Motor2_ENC_Pin) {
 		if (Ring_LastDirection == FINGER_Open)
 			Ring_Position++;
 		else
 			if (Ring_LastDirection == FINGER_Close)
 				Ring_Position--;
-	} else if (GPIO_Pin == Motor3_ENC_Pin) {
+	}
+	if (GPIO_Pin == Motor3_ENC_Pin) {
 		if (Middle_LastDirection == FINGER_Open)
 			Middle_Position++;
 		else
 			if (Middle_LastDirection == FINGER_Close)
 				Middle_Position--;
-	} else if (GPIO_Pin == Motor4_ENC_Pin) {
+	}
+	if (GPIO_Pin == Motor4_ENC_Pin) {
 		if (Index_LastDirection == FINGER_Open)
 			Index_Position++;
 		else
@@ -144,10 +147,10 @@ int main(void)
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
-  MX_USART1_UART_Init();
   MX_GPIO_Init();
   MX_DMA_Init();
   MX_ADC1_Init();
+  MX_USART1_UART_Init();
   MX_TIM1_Init();
   MX_TIM2_Init();
   MX_TIM3_Init();
@@ -174,14 +177,14 @@ int main(void)
 
 
 
-
+//	ManualControlActive=2;
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 	while (1) {
 
-
+//		Calculate_ADC_Current();
 		//		sensor = readSensor();				// update the process variable
 		//		setPoint = readSetPoint(); 			// update the user desired value
 
@@ -204,10 +207,13 @@ int main(void)
 		}else
 		if(ManualControlActive==2)
 		{
-			ApplyPIDToMotor(Index_Motor);
-			ApplyPIDToMotor(Middle_Motor);
-			ApplyPIDToMotor(Ring_Motor);
-			ApplyPIDToMotor(Pinky_Motor);
+			Index_LastDirection=ApplyPIDToMotor(Index_Motor);
+			Middle_LastDirection=ApplyPIDToMotor(Middle_Motor);
+			Ring_LastDirection=ApplyPIDToMotor(Ring_Motor);
+
+			Pinky_LastDirection=ApplyPIDToMotor(Pinky_Motor);
+			if(Ring_LastDirection==2&&Pinky_LastDirection==2&&Middle_LastDirection==2&&Index_LastDirection==2)
+				ManualControlActive=3;
 
 /**********************************************************************************************/
 			/*

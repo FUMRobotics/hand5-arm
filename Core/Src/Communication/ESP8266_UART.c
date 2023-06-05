@@ -187,6 +187,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 		uartRecieveBuffer[uartCounter]=RXuart;
 		if (uartRecieveBuffer[uartCounter] == '\n'&&uartRecieveBuffer[uartCounter-1] == '\r'&& uartRecieveBuffer[uartCounter-2] == '}') {
 			ProcessUartData();
+			ManualControlActive=2;
 			uartCounter=-1;
 			for(uint16_t cleanCounter=0;cleanCounter<150;cleanCounter++)
 				uartRecieveBuffer[cleanCounter]=0;
@@ -298,11 +299,11 @@ void Fetch_Position_Fingers(void)
 	//INIT EEprom
 	HAL_FLASH_Unlock();
 	EE_Init();
-	EE_ReadVariable(1, &Pinky_Position);
-	EE_ReadVariable(2, &Ring_Position);
-	EE_ReadVariable(3, &Middle_Position);
-	EE_ReadVariable(4, &Index_Position);
-	EE_ReadVariable(5, &Thumb_Position);
+//	EE_ReadVariable(1, &Pinky_Position);
+//	EE_ReadVariable(2, &Ring_Position);
+//	EE_ReadVariable(3, &Middle_Position);
+//	EE_ReadVariable(4, &Index_Position);
+//	EE_ReadVariable(5, &Thumb_Position);
 	HAL_FLASH_Lock();
 	//enable interrupts
 //	if(intrruptEnabled)
