@@ -7,7 +7,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2023 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -37,7 +37,6 @@ extern "C" {
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
 
-
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
@@ -50,39 +49,46 @@ extern "C" {
 
 /* USER CODE END EM */
 
-void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
-
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
-extern ADC_HandleTypeDef hadc1;
-extern DMA_HandleTypeDef hdma_adc1;
 
-extern TIM_HandleTypeDef htim1;
-extern TIM_HandleTypeDef htim2;
-extern TIM_HandleTypeDef htim3;
-extern TIM_HandleTypeDef htim4;
-
-
-extern UART_HandleTypeDef huart1;
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define LED_Pin GPIO_PIN_13
-#define LED_GPIO_Port GPIOC
-#define Motor5_INB_Pin GPIO_PIN_10
-#define Motor5_INB_GPIO_Port GPIOB
-#define Motor5_INA_Pin GPIO_PIN_11
-#define Motor5_INA_GPIO_Port GPIOB
-#define Motor4_INB_Pin GPIO_PIN_12
-#define Motor4_INB_GPIO_Port GPIOB
-#define Motor4_INA_Pin GPIO_PIN_13
-#define Motor4_INA_GPIO_Port GPIOB
-#define Motor3_INB_Pin GPIO_PIN_14
+#define LED1_Pin GPIO_PIN_13
+#define LED1_GPIO_Port GPIOC
+#define Motor3_Encoder1_Pin GPIO_PIN_0
+#define Motor3_Encoder1_GPIO_Port GPIOC
+#define Motor3_Encoder2_Pin GPIO_PIN_1
+#define Motor3_Encoder2_GPIO_Port GPIOC
+#define Motor1_Current_Pin GPIO_PIN_0
+#define Motor1_Current_GPIO_Port GPIOA
+#define Motor2_Current_Pin GPIO_PIN_1
+#define Motor2_Current_GPIO_Port GPIOA
+#define Motor3_Current_Pin GPIO_PIN_2
+#define Motor3_Current_GPIO_Port GPIOA
+#define Motor4_Current_Pin GPIO_PIN_3
+#define Motor4_Current_GPIO_Port GPIOA
+#define Motor5_Current_Pin GPIO_PIN_4
+#define Motor5_Current_GPIO_Port GPIOA
+#define Motor2_Encoder1_Pin GPIO_PIN_6
+#define Motor2_Encoder1_GPIO_Port GPIOA
+#define Motor2_Encoder2_Pin GPIO_PIN_7
+#define Motor2_Encoder2_GPIO_Port GPIOA
+#define Motor1_Encoder1_Pin GPIO_PIN_4
+#define Motor1_Encoder1_GPIO_Port GPIOC
+#define Motor1_Encoder2_Pin GPIO_PIN_5
+#define Motor1_Encoder2_GPIO_Port GPIOC
+#define Motor3_INB_Pin GPIO_PIN_12
 #define Motor3_INB_GPIO_Port GPIOB
-#define Motor3_INA_Pin GPIO_PIN_15
+#define Motor3_INA_Pin GPIO_PIN_13
 #define Motor3_INA_GPIO_Port GPIOB
+#define Motor4_INB_Pin GPIO_PIN_14
+#define Motor4_INB_GPIO_Port GPIOB
+#define Motor4_INA_Pin GPIO_PIN_15
+#define Motor4_INA_GPIO_Port GPIOB
 #define Motor2_INA_Pin GPIO_PIN_6
 #define Motor2_INA_GPIO_Port GPIOC
 #define Motor2_INB_Pin GPIO_PIN_7
@@ -91,21 +97,33 @@ extern UART_HandleTypeDef huart1;
 #define Motor1_INA_GPIO_Port GPIOC
 #define Motor1_INB_Pin GPIO_PIN_9
 #define Motor1_INB_GPIO_Port GPIOC
-#define Motor5_ENC_Pin GPIO_PIN_10
-#define Motor5_ENC_GPIO_Port GPIOC
-#define Motor5_ENC_EXTI_IRQn EXTI15_10_IRQn
-#define Motor4_ENC_Pin GPIO_PIN_11
-#define Motor4_ENC_GPIO_Port GPIOC
-#define Motor4_ENC_EXTI_IRQn EXTI15_10_IRQn
-#define Motor3_ENC_Pin GPIO_PIN_12
-#define Motor3_ENC_GPIO_Port GPIOC
-#define Motor3_ENC_EXTI_IRQn EXTI15_10_IRQn
-#define Motor2_ENC_Pin GPIO_PIN_4
-#define Motor2_ENC_GPIO_Port GPIOB
-#define Motor2_ENC_EXTI_IRQn EXTI4_IRQn
-#define Motor1_ENC_Pin GPIO_PIN_5
-#define Motor1_ENC_GPIO_Port GPIOB
-#define Motor1_ENC_EXTI_IRQn EXTI9_5_IRQn
+#define Motor1_PWM_Pin GPIO_PIN_8
+#define Motor1_PWM_GPIO_Port GPIOA
+#define Motor2_PWM_Pin GPIO_PIN_9
+#define Motor2_PWM_GPIO_Port GPIOA
+#define Motor3_PWM_Pin GPIO_PIN_10
+#define Motor3_PWM_GPIO_Port GPIOA
+#define Motor4_PWM_Pin GPIO_PIN_11
+#define Motor4_PWM_GPIO_Port GPIOA
+#define Motor5_Encoder1_Pin GPIO_PIN_12
+#define Motor5_Encoder1_GPIO_Port GPIOA
+#define Motor5_PWM_Pin GPIO_PIN_15
+#define Motor5_PWM_GPIO_Port GPIOA
+#define Motor5_Encoder2_Pin GPIO_PIN_10
+#define Motor5_Encoder2_GPIO_Port GPIOC
+#define Motor4_Encoder1_Pin GPIO_PIN_11
+#define Motor4_Encoder1_GPIO_Port GPIOC
+#define Motor4_Encoder2_Pin GPIO_PIN_12
+#define Motor4_Encoder2_GPIO_Port GPIOC
+#define Motor5_INB_Pin GPIO_PIN_2
+#define Motor5_INB_GPIO_Port GPIOD
+#define Motor5_INA_Pin GPIO_PIN_3
+#define Motor5_INA_GPIO_Port GPIOB
+#define ESP_TX_Pin GPIO_PIN_6
+#define ESP_TX_GPIO_Port GPIOB
+#define ESP_RX_Pin GPIO_PIN_7
+#define ESP_RX_GPIO_Port GPIOB
+
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
