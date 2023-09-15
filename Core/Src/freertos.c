@@ -25,6 +25,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "adc.h"
 #include "motor_Control.h"
 /* USER CODE END Includes */
 
@@ -163,6 +164,7 @@ void ThumbFinger(void *argument)
 	{
 		SetMotor(Thumb, Fingers_Status.Thumb);
 		Read_Encoder(&Fingers_Status.Thumb, Thumb);
+		ADC_ReadCurrent_Thumb();
 		osDelay(1);
 	}
   /* USER CODE END ThumbFinger */
@@ -181,8 +183,10 @@ void IndexFinger(void *argument)
 	/* Infinite loop */
 	for(;;)
 	{
+
 		SetMotor(Index, Fingers_Status.Index);
 		Read_Encoder(&Fingers_Status.Index, Index);
+		ADC_ReadCurrent_Index();
 		osDelay(1);
 	}
   /* USER CODE END IndexFinger */
@@ -203,6 +207,7 @@ void MiddleFinger(void *argument)
 	{
 		SetMotor(Middle, Fingers_Status.Middle);
 		Read_Encoder(&Fingers_Status.Middle, Middle);
+		ADC_ReadCurrent_Middle();
 		osDelay(1);
 	}
   /* USER CODE END MiddleFinger */
@@ -223,6 +228,7 @@ void Ringfinger(void *argument)
 	{
 		SetMotor(Ring, Fingers_Status.Ring);
 		Read_Encoder(&Fingers_Status.Ring, Ring);
+		ADC_ReadCurrent_Ring();
 		osDelay(1);
 	}
   /* USER CODE END Ringfinger */
@@ -243,6 +249,7 @@ void PinkyFinger(void *argument)
 	{
 		SetMotor(Pinky, Fingers_Status.Pinky);
 		Read_Encoder(&Fingers_Status.Ring, Ring);
+		ADC_ReadCurrent_Pinky();
 		osDelay(1);
 	}
   /* USER CODE END PinkyFinger */

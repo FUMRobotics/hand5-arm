@@ -35,12 +35,14 @@ typedef enum
 typedef struct
 {
 	uint8_t SetPoint;
-	uint8_t Encoder;
+	uint8_t position;
+	uint32_t Encoder;
 	Move_Direction_Enum Direction;
 	Encoder_State_Enum current_Encoder_State;
 	Encoder_State_Enum Pre_Encoder_State;
 	_Bool Statck_Finger;
 	uint8_t speed;
+	uint32_t Current;
 }Finger_Struct;
 typedef struct
 {
@@ -53,6 +55,7 @@ typedef struct
 //-------------- EXTERN variable -------------------
 extern Fingers_Struct Fingers_Status;
 extern uint8_t ManualControl;
+extern uint32_t Current_motor[6];
 //-------------- function prototype -------------------
 void Read_Encoder (Finger_Struct* FingerStruct,Fingers_Name_Enum FingerName);
 void SetMotor(Fingers_Name_Enum name,Finger_Struct  FingerStruct);

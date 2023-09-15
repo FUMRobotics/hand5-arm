@@ -9,10 +9,9 @@
 #include "PID.h"
 #include "tim.h"
 #include "adc.h"
-#include "dma.h"
 //-------------- variable -------------------
 Fingers_Struct Fingers_Status;
-uint32_t Current_motor[5];
+uint32_t Current_motor[6];
 qPID controller;
 uint8_t ManualControl=0;
 //-------------- structure -------------------
@@ -39,7 +38,7 @@ void Read_Encoder (Finger_Struct* FingerStruct,Fingers_Name_Enum FingerName)
 			FingerStruct->current_Encoder_State=Alow_Blow;
 		if(FingerStruct->current_Encoder_State != FingerStruct->Pre_Encoder_State)
 		{
-			FingerStruct->Encoder=FingerStruct->Pre_Encoder_State-FingerStruct->current_Encoder_State;
+			FingerStruct->Encoder+=FingerStruct->Pre_Encoder_State-FingerStruct->current_Encoder_State;
 			FingerStruct->Pre_Encoder_State=FingerStruct->current_Encoder_State;
 		}
 		break;
@@ -56,7 +55,7 @@ void Read_Encoder (Finger_Struct* FingerStruct,Fingers_Name_Enum FingerName)
 			FingerStruct->current_Encoder_State=Alow_Blow;
 		if(FingerStruct->current_Encoder_State != FingerStruct->Pre_Encoder_State)
 		{
-			FingerStruct->Encoder=FingerStruct->Pre_Encoder_State-FingerStruct->current_Encoder_State;
+			FingerStruct->Encoder+=FingerStruct->Pre_Encoder_State-FingerStruct->current_Encoder_State;
 			FingerStruct->Pre_Encoder_State=FingerStruct->current_Encoder_State;
 		}
 		break;
@@ -73,7 +72,7 @@ void Read_Encoder (Finger_Struct* FingerStruct,Fingers_Name_Enum FingerName)
 			FingerStruct->current_Encoder_State=Alow_Blow;
 		if(FingerStruct->current_Encoder_State != FingerStruct->Pre_Encoder_State)
 		{
-			FingerStruct->Encoder=FingerStruct->Pre_Encoder_State-FingerStruct->current_Encoder_State;
+			FingerStruct->Encoder+=FingerStruct->Pre_Encoder_State-FingerStruct->current_Encoder_State;
 			FingerStruct->Pre_Encoder_State=FingerStruct->current_Encoder_State;
 		}
 		break;
@@ -90,7 +89,7 @@ void Read_Encoder (Finger_Struct* FingerStruct,Fingers_Name_Enum FingerName)
 			FingerStruct->current_Encoder_State=Alow_Blow;
 		if(FingerStruct->current_Encoder_State != FingerStruct->Pre_Encoder_State)
 		{
-			FingerStruct->Encoder=FingerStruct->Pre_Encoder_State-FingerStruct->current_Encoder_State;
+			FingerStruct->Encoder+=FingerStruct->Pre_Encoder_State-FingerStruct->current_Encoder_State;
 			FingerStruct->Pre_Encoder_State=FingerStruct->current_Encoder_State;
 		}
 		break;
@@ -107,7 +106,7 @@ void Read_Encoder (Finger_Struct* FingerStruct,Fingers_Name_Enum FingerName)
 			FingerStruct->current_Encoder_State=Alow_Blow;
 		if(FingerStruct->current_Encoder_State != FingerStruct->Pre_Encoder_State)
 		{
-			FingerStruct->Encoder=FingerStruct->Pre_Encoder_State-FingerStruct->current_Encoder_State;
+			FingerStruct->Encoder+=FingerStruct->Pre_Encoder_State-FingerStruct->current_Encoder_State;
 			FingerStruct->Pre_Encoder_State=FingerStruct->current_Encoder_State;
 		}
 		break;
@@ -121,11 +120,11 @@ void Read_Encoder (Finger_Struct* FingerStruct,Fingers_Name_Enum FingerName)
 void SetMotor(Fingers_Name_Enum name,Finger_Struct  FingerStruct) {
 	switch (name) {
 	case Thumb :
-		if ( FingerStruct.Direction== Close) {
+		if ( FingerStruct.Direction== Open) {
 			htim2.Instance->CCR1 = FingerStruct.speed;
 			HAL_GPIO_WritePin(Motor5_INA_GPIO_Port, Motor5_INA_Pin, 0);
 			HAL_GPIO_WritePin(Motor5_INB_GPIO_Port, Motor5_INB_Pin, 1);
-		} else if (FingerStruct.Direction == Open) {
+		} else if (FingerStruct.Direction == Close) {
 			htim2.Instance->CCR1 = FingerStruct.speed;
 			HAL_GPIO_WritePin(Motor5_INA_GPIO_Port, Motor5_INA_Pin, 1);
 			HAL_GPIO_WritePin(Motor5_INB_GPIO_Port, Motor5_INB_Pin, 0);
@@ -136,11 +135,11 @@ void SetMotor(Fingers_Name_Enum name,Finger_Struct  FingerStruct) {
 		}
 		break;
 	case Index :
-		if ( FingerStruct.Direction== Close) {
+		if ( FingerStruct.Direction== Open) {
 			htim1.Instance->CCR4 = FingerStruct.speed;
 			HAL_GPIO_WritePin(Motor4_INA_GPIO_Port, Motor4_INA_Pin, 0);
 			HAL_GPIO_WritePin(Motor4_INB_GPIO_Port, Motor4_INB_Pin, 1);
-		} else if (FingerStruct.Direction == Open) {
+		} else if (FingerStruct.Direction == Close) {
 			htim1.Instance->CCR4 = FingerStruct.speed;
 			HAL_GPIO_WritePin(Motor4_INA_GPIO_Port, Motor4_INA_Pin, 1);
 			HAL_GPIO_WritePin(Motor4_INB_GPIO_Port, Motor4_INB_Pin, 0);
@@ -151,11 +150,11 @@ void SetMotor(Fingers_Name_Enum name,Finger_Struct  FingerStruct) {
 		}
 		break;
 	case Middle :
-		if ( FingerStruct.Direction== Close) {
+		if ( FingerStruct.Direction== Open) {
 			htim1.Instance->CCR3 = FingerStruct.speed;
 			HAL_GPIO_WritePin(Motor3_INA_GPIO_Port, Motor3_INA_Pin, 0);
 			HAL_GPIO_WritePin(Motor3_INB_GPIO_Port, Motor3_INB_Pin, 1);
-		} else if (FingerStruct.Direction == Open) {
+		} else if (FingerStruct.Direction == Close) {
 			htim1.Instance->CCR3 = FingerStruct.speed;
 			HAL_GPIO_WritePin(Motor3_INA_GPIO_Port, Motor3_INA_Pin, 1);
 			HAL_GPIO_WritePin(Motor3_INB_GPIO_Port, Motor3_INB_Pin, 0);
@@ -166,11 +165,11 @@ void SetMotor(Fingers_Name_Enum name,Finger_Struct  FingerStruct) {
 		}
 		break;
 	case Ring :
-		if ( FingerStruct.Direction== Close) {
+		if ( FingerStruct.Direction== Open) {
 			htim1.Instance->CCR2 = FingerStruct.speed;
 			HAL_GPIO_WritePin(Motor2_INA_GPIO_Port, Motor2_INA_Pin, 0);
 			HAL_GPIO_WritePin(Motor2_INB_GPIO_Port, Motor2_INB_Pin, 1);
-		} else if (FingerStruct.Direction == Open) {
+		} else if (FingerStruct.Direction == Close) {
 			htim1.Instance->CCR2 = FingerStruct.speed;
 			HAL_GPIO_WritePin(Motor2_INA_GPIO_Port, Motor2_INA_Pin, 1);
 			HAL_GPIO_WritePin(Motor2_INB_GPIO_Port, Motor2_INB_Pin, 0);
@@ -181,11 +180,11 @@ void SetMotor(Fingers_Name_Enum name,Finger_Struct  FingerStruct) {
 		}
 		break;
 	case Pinky :
-		if ( FingerStruct.Direction== Close) {
+		if ( FingerStruct.Direction== Open) {
 			htim1.Instance->CCR1 = FingerStruct.speed;
 			HAL_GPIO_WritePin(Motor1_INA_GPIO_Port, Motor1_INA_Pin, 0);
 			HAL_GPIO_WritePin(Motor1_INB_GPIO_Port, Motor1_INB_Pin, 1);
-		} else if (FingerStruct.Direction == Open) {
+		} else if (FingerStruct.Direction == Close) {
 			htim1.Instance->CCR1 = FingerStruct.speed;
 			HAL_GPIO_WritePin(Motor1_INA_GPIO_Port, Motor1_INA_Pin, 1);
 			HAL_GPIO_WritePin(Motor1_INB_GPIO_Port, Motor1_INB_Pin, 0);
@@ -213,7 +212,6 @@ void init_motor_controller(void)
 	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4);
 	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
 	HAL_ADC_MspInit(&hadc1);
-	HAL_ADC_Start_DMA(&hadc1, (uint32_t*) Current_motor, 5);
 	// Configure settings
 	controller.AntiWindup = ENABLED;
 	controller.Bumpless = ENABLED;
