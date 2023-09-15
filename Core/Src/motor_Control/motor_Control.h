@@ -52,8 +52,9 @@ typedef struct
 }Fingers_Struct;
 //-------------- EXTERN variable -------------------
 extern Fingers_Struct Fingers_Status;
+extern uint8_t ManualControl;
 //-------------- function prototype -------------------
 void Read_Encoder (Finger_Struct* FingerStruct,Fingers_Name_Enum FingerName);
-void SetMotor(Fingers_Name_Enum name,Finger_Struct  FingerStruct, uint8_t motor_speed);
+void SetMotor(Fingers_Name_Enum name,Finger_Struct  FingerStruct);
 void init_motor_controller(void);
 #endif /* SRC_MOTOR_CONTROL_MOTOR_CONTROL_H_ */

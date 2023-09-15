@@ -115,9 +115,6 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
 
     __HAL_AFIO_REMAP_USART1_ENABLE();
 
-    /* USART1 interrupt Init */
-    HAL_NVIC_SetPriority(USART1_IRQn, 5, 0);
-    HAL_NVIC_EnableIRQ(USART1_IRQn);
   /* USER CODE BEGIN USART1_MspInit 1 */
 
   /* USER CODE END USART1_MspInit 1 */
@@ -168,8 +165,6 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
     */
     HAL_GPIO_DeInit(GPIOB, ESP_TX_Pin|ESP_RX_Pin);
 
-    /* USART1 interrupt Deinit */
-    HAL_NVIC_DisableIRQ(USART1_IRQn);
   /* USER CODE BEGIN USART1_MspDeInit 1 */
 
   /* USER CODE END USART1_MspDeInit 1 */

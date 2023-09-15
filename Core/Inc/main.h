@@ -93,10 +93,10 @@ void Error_Handler(void);
 #define Motor2_INA_GPIO_Port GPIOC
 #define Motor2_INB_Pin GPIO_PIN_7
 #define Motor2_INB_GPIO_Port GPIOC
-#define Motor1_INA_Pin GPIO_PIN_8
-#define Motor1_INA_GPIO_Port GPIOC
-#define Motor1_INB_Pin GPIO_PIN_9
+#define Motor1_INB_Pin GPIO_PIN_8
 #define Motor1_INB_GPIO_Port GPIOC
+#define Motor1_INA_Pin GPIO_PIN_9
+#define Motor1_INA_GPIO_Port GPIOC
 #define Motor1_PWM_Pin GPIO_PIN_8
 #define Motor1_PWM_GPIO_Port GPIOA
 #define Motor2_PWM_Pin GPIO_PIN_9

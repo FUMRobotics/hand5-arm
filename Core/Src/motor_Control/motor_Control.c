@@ -14,7 +14,7 @@
 Fingers_Struct Fingers_Status;
 uint32_t Current_motor[5];
 qPID controller;
-
+uint8_t ManualControl=0;
 //-------------- structure -------------------
 //-------------- enumeration -------------------
 //-------------- function -------------------
@@ -118,15 +118,15 @@ void Read_Encoder (Finger_Struct* FingerStruct,Fingers_Name_Enum FingerName)
 /*
  * motor control
  */
-void SetMotor(Fingers_Name_Enum name,Finger_Struct  FingerStruct, uint8_t motor_speed) {
+void SetMotor(Fingers_Name_Enum name,Finger_Struct  FingerStruct) {
 	switch (name) {
 	case Thumb :
 		if ( FingerStruct.Direction== Close) {
-			htim2.Instance->CCR1 = motor_speed;
+			htim2.Instance->CCR1 = FingerStruct.speed;
 			HAL_GPIO_WritePin(Motor5_INA_GPIO_Port, Motor5_INA_Pin, 0);
 			HAL_GPIO_WritePin(Motor5_INB_GPIO_Port, Motor5_INB_Pin, 1);
 		} else if (FingerStruct.Direction == Open) {
-			htim2.Instance->CCR1 = motor_speed;
+			htim2.Instance->CCR1 = FingerStruct.speed;
 			HAL_GPIO_WritePin(Motor5_INA_GPIO_Port, Motor5_INA_Pin, 1);
 			HAL_GPIO_WritePin(Motor5_INB_GPIO_Port, Motor5_INB_Pin, 0);
 		} else {
@@ -137,11 +137,11 @@ void SetMotor(Fingers_Name_Enum name,Finger_Struct  FingerStruct, uint8_t motor_
 		break;
 	case Index :
 		if ( FingerStruct.Direction== Close) {
-			htim1.Instance->CCR4 = motor_speed;
+			htim1.Instance->CCR4 = FingerStruct.speed;
 			HAL_GPIO_WritePin(Motor4_INA_GPIO_Port, Motor4_INA_Pin, 0);
 			HAL_GPIO_WritePin(Motor4_INB_GPIO_Port, Motor4_INB_Pin, 1);
 		} else if (FingerStruct.Direction == Open) {
-			htim1.Instance->CCR4 = motor_speed;
+			htim1.Instance->CCR4 = FingerStruct.speed;
 			HAL_GPIO_WritePin(Motor4_INA_GPIO_Port, Motor4_INA_Pin, 1);
 			HAL_GPIO_WritePin(Motor4_INB_GPIO_Port, Motor4_INB_Pin, 0);
 		} else {
@@ -152,11 +152,11 @@ void SetMotor(Fingers_Name_Enum name,Finger_Struct  FingerStruct, uint8_t motor_
 		break;
 	case Middle :
 		if ( FingerStruct.Direction== Close) {
-			htim1.Instance->CCR3 = motor_speed;
+			htim1.Instance->CCR3 = FingerStruct.speed;
 			HAL_GPIO_WritePin(Motor3_INA_GPIO_Port, Motor3_INA_Pin, 0);
 			HAL_GPIO_WritePin(Motor3_INB_GPIO_Port, Motor3_INB_Pin, 1);
 		} else if (FingerStruct.Direction == Open) {
-			htim1.Instance->CCR3 = motor_speed;
+			htim1.Instance->CCR3 = FingerStruct.speed;
 			HAL_GPIO_WritePin(Motor3_INA_GPIO_Port, Motor3_INA_Pin, 1);
 			HAL_GPIO_WritePin(Motor3_INB_GPIO_Port, Motor3_INB_Pin, 0);
 		} else {
@@ -167,11 +167,11 @@ void SetMotor(Fingers_Name_Enum name,Finger_Struct  FingerStruct, uint8_t motor_
 		break;
 	case Ring :
 		if ( FingerStruct.Direction== Close) {
-			htim1.Instance->CCR2 = motor_speed;
+			htim1.Instance->CCR2 = FingerStruct.speed;
 			HAL_GPIO_WritePin(Motor2_INA_GPIO_Port, Motor2_INA_Pin, 0);
 			HAL_GPIO_WritePin(Motor2_INB_GPIO_Port, Motor2_INB_Pin, 1);
 		} else if (FingerStruct.Direction == Open) {
-			htim1.Instance->CCR2 = motor_speed;
+			htim1.Instance->CCR2 = FingerStruct.speed;
 			HAL_GPIO_WritePin(Motor2_INA_GPIO_Port, Motor2_INA_Pin, 1);
 			HAL_GPIO_WritePin(Motor2_INB_GPIO_Port, Motor2_INB_Pin, 0);
 		} else {
@@ -182,11 +182,11 @@ void SetMotor(Fingers_Name_Enum name,Finger_Struct  FingerStruct, uint8_t motor_
 		break;
 	case Pinky :
 		if ( FingerStruct.Direction== Close) {
-			htim1.Instance->CCR1 = motor_speed;
+			htim1.Instance->CCR1 = FingerStruct.speed;
 			HAL_GPIO_WritePin(Motor1_INA_GPIO_Port, Motor1_INA_Pin, 0);
 			HAL_GPIO_WritePin(Motor1_INB_GPIO_Port, Motor1_INB_Pin, 1);
 		} else if (FingerStruct.Direction == Open) {
-			htim1.Instance->CCR1 = motor_speed;
+			htim1.Instance->CCR1 = FingerStruct.speed;
 			HAL_GPIO_WritePin(Motor1_INA_GPIO_Port, Motor1_INA_Pin, 1);
 			HAL_GPIO_WritePin(Motor1_INB_GPIO_Port, Motor1_INB_Pin, 0);
 		} else {
