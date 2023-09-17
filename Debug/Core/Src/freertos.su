@@ -1,6 +1,6 @@
-../Core/Src/freertos.c:105:6:MX_FREERTOS_Init	8	static
-../Core/Src/freertos.c:159:6:ThumbFinger	32	static
-../Core/Src/freertos.c:180:6:IndexFinger	32	static
-../Core/Src/freertos.c:202:6:MiddleFinger	32	static
-../Core/Src/freertos.c:223:6:Ringfinger	32	static
-../Core/Src/freertos.c:244:6:PinkyFinger	32	static
+../Core/Src/freertos.c:131:6:MX_FREERTOS_Init	8	static
+../Core/Src/freertos.c:185:6:ThumbFinger	40	static,ignoring_inline_asm
+../Core/Src/freertos.c:210:6:IndexFinger	40	static,ignoring_inline_asm
+../Core/Src/freertos.c:235:6:MiddleFinger	40	static,ignoring_inline_asm
+../Core/Src/freertos.c:260:6:Ringfinger	40	static,ignoring_inline_asm
+../Core/Src/freertos.c:285:6:PinkyFinger	40	static,ignoring_inline_asm

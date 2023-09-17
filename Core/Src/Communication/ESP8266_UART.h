@@ -7,7 +7,10 @@
 
 #ifndef SRC_COMMUNICATION_ESP8266_UART_H_
 #define SRC_COMMUNICATION_ESP8266_UART_H_
-
+//extern variable************************************
+extern char uartRecieveBuffer[150];
+extern uint8_t RXuart;
+//prototype functions************************************
 void calculate_Position_Fingers(void);
 void Fetch_Position_Fingers(void);
 

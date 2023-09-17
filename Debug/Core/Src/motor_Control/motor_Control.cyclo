@@ -1,3 +1,3 @@
-../Core/Src/motor_Control/motor_Control.c:23:6:Read_Encoder	41
-../Core/Src/motor_Control/motor_Control.c:120:6:SetMotor	16
-../Core/Src/motor_Control/motor_Control.c:206:6:init_motor_controller	1
+../Core/Src/motor_Control/motor_Control.c:25:6:Read_Encoder	43
+../Core/Src/motor_Control/motor_Control.c:125:6:SetMotor	16
+../Core/Src/motor_Control/motor_Control.c:211:6:init_motor_controller	1

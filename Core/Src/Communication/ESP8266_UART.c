@@ -19,8 +19,8 @@
 /* USER CODE END Includes */
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-char uartRecieveBuffer[150];
 uint16_t uartCounter = 0;
+char uartRecieveBuffer[150];
 uint8_t RXuart=0;
 volatile uint8_t HandStruct[5]={100,};
 /* USER CODE END PV */
@@ -100,48 +100,48 @@ _Bool ProcessUartData(void)
 			char FingerValue[100] = {0,};
 			strncpy(FingerValue, uartRecieveBuffer + t[i + 1].start, t[i + 1].end - t[i + 1].start);
 			i++;
-			HandStruct[HandFinger-1]=0;
+			HandStruct[HandFinger]=0;
 			for (int counter = 0; counter < strlen(FingerValue); counter++)
 			{
 				switch (FingerValue[counter]) {
 				case '0':
-					HandStruct[HandFinger - 1] += 0 * pow(10,(strlen(FingerValue) - (counter+1)));
+					HandStruct[HandFinger] += 0 * pow(10,(strlen(FingerValue) - (counter+1)));
 
 					break;
 				case '1':
-					HandStruct[HandFinger - 1] += 1 * pow(10,(strlen(FingerValue) - (counter+1)));
+					HandStruct[HandFinger] += 1 * pow(10,(strlen(FingerValue) - (counter+1)));
 
 					break;
 				case '2':
-					HandStruct[HandFinger - 1] += 2 * pow(10,(strlen(FingerValue) - (counter+1)));
+					HandStruct[HandFinger] += 2 * pow(10,(strlen(FingerValue) - (counter+1)));
 
 					break;
 				case '3':
-					HandStruct[HandFinger - 1] += 3 * pow(10,(strlen(FingerValue) - (counter+1)));
+					HandStruct[HandFinger] += 3 * pow(10,(strlen(FingerValue) - (counter+1)));
 
 					break;
 				case '4':
-					HandStruct[HandFinger - 1]+= 4 * pow(10,(strlen(FingerValue) - (counter+1)));
+					HandStruct[HandFinger]+= 4 * pow(10,(strlen(FingerValue) - (counter+1)));
 
 					break;
 				case '5':
-					HandStruct[HandFinger - 1]+= 5 * pow(10,(strlen(FingerValue) - (counter+1)));
+					HandStruct[HandFinger]+= 5 * pow(10,(strlen(FingerValue) - (counter+1)));
 
 					break;
 				case '6':
-					HandStruct[HandFinger - 1]+= 6 * pow(10,(strlen(FingerValue) - (counter+1)));
+					HandStruct[HandFinger]+= 6 * pow(10,(strlen(FingerValue) - (counter+1)));
 
 					break;
 				case '7':
-					HandStruct[HandFinger - 1]+= 7 * pow(10,(strlen(FingerValue) - (counter+1)));
+					HandStruct[HandFinger]+= 7 * pow(10,(strlen(FingerValue) - (counter+1)));
 
 					break;
 				case '8':
-					HandStruct[HandFinger - 1]+= 8 * pow(10,(strlen(FingerValue) - (counter+1)));
+					HandStruct[HandFinger]+= 8 * pow(10,(strlen(FingerValue) - (counter+1)));
 
 					break;
 				case '9':
-					HandStruct[HandFinger - 1]+= 9 * pow(10,(strlen(FingerValue) - (counter+1)));
+					HandStruct[HandFinger]+= 9 * pow(10,(strlen(FingerValue) - (counter+1)));
 
 					break;
 				default:

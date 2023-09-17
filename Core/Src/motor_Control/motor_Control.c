@@ -9,6 +9,8 @@
 #include "PID.h"
 #include "tim.h"
 #include "adc.h"
+#include "ESP8266_UART.h"
+#include "usart.h"
 //-------------- variable -------------------
 Fingers_Struct Fingers_Status;
 uint32_t Current_motor[6];
@@ -22,17 +24,17 @@ uint8_t ManualControl=0;
  */
 void Read_Encoder (Finger_Struct* FingerStruct,Fingers_Name_Enum FingerName)
 {
-	_Bool Signal_A;
-	_Bool Signal_B;
+//	_Bool Signal_A;
+//	_Bool Signal_B;
 	switch (FingerName) {
 	case Thumb:
-		Signal_A=HAL_GPIO_ReadPin(Motor5_Encoder1_GPIO_Port,Motor5_Encoder1_Pin);
-		Signal_B=HAL_GPIO_ReadPin(Motor5_Encoder2_GPIO_Port,Motor5_Encoder2_Pin);
-		if(Signal_A && Signal_B)
+		FingerStruct->SignalA=HAL_GPIO_ReadPin(Motor5_Encoder1_GPIO_Port,Motor5_Encoder1_Pin);
+		FingerStruct->SignalB=HAL_GPIO_ReadPin(Motor5_Encoder2_GPIO_Port,Motor5_Encoder2_Pin);
+		if(FingerStruct->SignalA && FingerStruct->SignalB)
 			FingerStruct->current_Encoder_State=Ahigh_Bhigh;
-		else if (Signal_A && !Signal_B)
+		else if (FingerStruct->SignalA && !FingerStruct->SignalB)
 			FingerStruct->current_Encoder_State=Ahigh_Blow;
-		else if (!Signal_A && Signal_B)
+		else if (!FingerStruct->SignalA && FingerStruct->SignalB)
 			FingerStruct->current_Encoder_State=Alow_Bhigh;
 		else
 			FingerStruct->current_Encoder_State=Alow_Blow;
@@ -43,30 +45,33 @@ void Read_Encoder (Finger_Struct* FingerStruct,Fingers_Name_Enum FingerName)
 		}
 		break;
 	case Index:
-		Signal_A=HAL_GPIO_ReadPin(Motor4_Encoder1_GPIO_Port,Motor4_Encoder1_Pin);
-		Signal_B=HAL_GPIO_ReadPin(Motor4_Encoder2_GPIO_Port,Motor4_Encoder2_Pin);
-		if(Signal_A && Signal_B)
+		FingerStruct->SignalA=HAL_GPIO_ReadPin(Motor4_Encoder1_GPIO_Port,Motor4_Encoder1_Pin);
+		FingerStruct->SignalB=HAL_GPIO_ReadPin(Motor4_Encoder2_GPIO_Port,Motor4_Encoder2_Pin);
+		if(FingerStruct->SignalA && FingerStruct->SignalB)
 			FingerStruct->current_Encoder_State=Ahigh_Bhigh;
-		else if (Signal_A && !Signal_B)
+		else if (FingerStruct->SignalA && !FingerStruct->SignalB)
 			FingerStruct->current_Encoder_State=Ahigh_Blow;
-		else if (!Signal_A && Signal_B)
+		else if (!FingerStruct->SignalA && FingerStruct->SignalB)
 			FingerStruct->current_Encoder_State=Alow_Bhigh;
 		else
 			FingerStruct->current_Encoder_State=Alow_Blow;
 		if(FingerStruct->current_Encoder_State != FingerStruct->Pre_Encoder_State)
 		{
-			FingerStruct->Encoder+=FingerStruct->Pre_Encoder_State-FingerStruct->current_Encoder_State;
+			if(FingerStruct->Direction==Open)
+				FingerStruct->Encoder++;
+			else if(FingerStruct->Direction==Close)
+				FingerStruct->Encoder--;
 			FingerStruct->Pre_Encoder_State=FingerStruct->current_Encoder_State;
 		}
 		break;
 	case Middle:
-		Signal_A=HAL_GPIO_ReadPin(Motor3_Encoder1_GPIO_Port,Motor3_Encoder1_Pin);
-		Signal_B=HAL_GPIO_ReadPin(Motor3_Encoder2_GPIO_Port,Motor3_Encoder2_Pin);
-		if(Signal_A && Signal_B)
+		FingerStruct->SignalA=HAL_GPIO_ReadPin(Motor3_Encoder1_GPIO_Port,Motor3_Encoder1_Pin);
+		FingerStruct->SignalB=HAL_GPIO_ReadPin(Motor3_Encoder2_GPIO_Port,Motor3_Encoder2_Pin);
+		if(FingerStruct->SignalA && FingerStruct->SignalB)
 			FingerStruct->current_Encoder_State=Ahigh_Bhigh;
-		else if (Signal_A && !Signal_B)
+		else if (FingerStruct->SignalA && !FingerStruct->SignalB)
 			FingerStruct->current_Encoder_State=Ahigh_Blow;
-		else if (!Signal_A && Signal_B)
+		else if (!FingerStruct->SignalA && FingerStruct->SignalB)
 			FingerStruct->current_Encoder_State=Alow_Bhigh;
 		else
 			FingerStruct->current_Encoder_State=Alow_Blow;
@@ -77,13 +82,13 @@ void Read_Encoder (Finger_Struct* FingerStruct,Fingers_Name_Enum FingerName)
 		}
 		break;
 	case Ring:
-		Signal_A=HAL_GPIO_ReadPin(Motor2_Encoder1_GPIO_Port,Motor2_Encoder1_Pin);
-		Signal_B=HAL_GPIO_ReadPin(Motor2_Encoder2_GPIO_Port,Motor2_Encoder2_Pin);
-		if(Signal_A && Signal_B)
+		FingerStruct->SignalA=HAL_GPIO_ReadPin(Motor2_Encoder1_GPIO_Port,Motor2_Encoder1_Pin);
+		FingerStruct->SignalB=HAL_GPIO_ReadPin(Motor2_Encoder2_GPIO_Port,Motor2_Encoder2_Pin);
+		if(FingerStruct->SignalA && FingerStruct->SignalB)
 			FingerStruct->current_Encoder_State=Ahigh_Bhigh;
-		else if (Signal_A && !Signal_B)
+		else if (FingerStruct->SignalA && !FingerStruct->SignalB)
 			FingerStruct->current_Encoder_State=Ahigh_Blow;
-		else if (!Signal_A && Signal_B)
+		else if (!FingerStruct->SignalA && FingerStruct->SignalB)
 			FingerStruct->current_Encoder_State=Alow_Bhigh;
 		else
 			FingerStruct->current_Encoder_State=Alow_Blow;
@@ -94,13 +99,13 @@ void Read_Encoder (Finger_Struct* FingerStruct,Fingers_Name_Enum FingerName)
 		}
 		break;
 	case Pinky:
-		Signal_A=HAL_GPIO_ReadPin(Motor1_Encoder1_GPIO_Port,Motor1_Encoder1_Pin);
-		Signal_B=HAL_GPIO_ReadPin(Motor1_Encoder2_GPIO_Port,Motor1_Encoder2_Pin);
-		if(Signal_A && Signal_B)
+		FingerStruct->SignalA=HAL_GPIO_ReadPin(Motor1_Encoder1_GPIO_Port,Motor1_Encoder1_Pin);
+		FingerStruct->SignalB=HAL_GPIO_ReadPin(Motor1_Encoder2_GPIO_Port,Motor1_Encoder2_Pin);
+		if(FingerStruct->SignalA && FingerStruct->SignalB)
 			FingerStruct->current_Encoder_State=Ahigh_Bhigh;
-		else if (Signal_A && !Signal_B)
+		else if (FingerStruct->SignalA && !FingerStruct->SignalB)
 			FingerStruct->current_Encoder_State=Ahigh_Blow;
-		else if (!Signal_A && Signal_B)
+		else if (!FingerStruct->SignalA && FingerStruct->SignalB)
 			FingerStruct->current_Encoder_State=Alow_Bhigh;
 		else
 			FingerStruct->current_Encoder_State=Alow_Blow;
@@ -212,6 +217,7 @@ void init_motor_controller(void)
 	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4);
 	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
 	HAL_ADC_MspInit(&hadc1);
+	HAL_UART_Receive_IT(&huart1, &RXuart, 1);
 	// Configure settings
 	controller.AntiWindup = ENABLED;
 	controller.Bumpless = ENABLED;

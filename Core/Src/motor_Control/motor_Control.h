@@ -18,10 +18,10 @@ typedef enum
 }Move_Direction_Enum;
 typedef enum
 {
-	Ahigh_Bhigh=1,
-	Ahigh_Blow,
+	Alow_Blow=1,
 	Alow_Bhigh,
-	Alow_Blow,
+	Ahigh_Bhigh,
+	Ahigh_Blow,
 }Encoder_State_Enum;
 typedef enum
 {
@@ -40,9 +40,11 @@ typedef struct
 	Move_Direction_Enum Direction;
 	Encoder_State_Enum current_Encoder_State;
 	Encoder_State_Enum Pre_Encoder_State;
-	_Bool Statck_Finger;
+	_Bool Stuck_Finger;
 	uint8_t speed;
 	uint32_t Current;
+	volatile _Bool SignalA;
+	volatile _Bool SignalB;
 }Finger_Struct;
 typedef struct
 {
