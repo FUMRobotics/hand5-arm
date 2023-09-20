@@ -51,7 +51,7 @@ typedef StaticTask_t osStaticThreadDef_t;
 /* USER CODE END Variables */
 /* Definitions for ThumbFinger_Tas */
 osThreadId_t ThumbFinger_TasHandle;
-uint32_t ThumbFinger_TasBuffer[ 256 ];
+uint32_t ThumbFinger_TasBuffer[ 128 ];
 osStaticThreadDef_t ThumbFinger_TasControlBlock;
 const osThreadAttr_t ThumbFinger_Tas_attributes = {
   .name = "ThumbFinger_Tas",
@@ -63,7 +63,7 @@ const osThreadAttr_t ThumbFinger_Tas_attributes = {
 };
 /* Definitions for IndexFinger_Tas */
 osThreadId_t IndexFinger_TasHandle;
-uint32_t IndexFinger_TasBuffer[ 256 ];
+uint32_t IndexFinger_TasBuffer[ 128 ];
 osStaticThreadDef_t IndexFinger_TasControlBlock;
 const osThreadAttr_t IndexFinger_Tas_attributes = {
   .name = "IndexFinger_Tas",
@@ -71,11 +71,11 @@ const osThreadAttr_t IndexFinger_Tas_attributes = {
   .cb_size = sizeof(IndexFinger_TasControlBlock),
   .stack_mem = &IndexFinger_TasBuffer[0],
   .stack_size = sizeof(IndexFinger_TasBuffer),
-  .priority = (osPriority_t) osPriorityBelowNormal1,
+  .priority = (osPriority_t) osPriorityNormal6,
 };
 /* Definitions for MiddleFinger_Ta */
 osThreadId_t MiddleFinger_TaHandle;
-uint32_t MiddleFinger_TaBuffer[ 256 ];
+uint32_t MiddleFinger_TaBuffer[ 128 ];
 osStaticThreadDef_t MiddleFinger_TaControlBlock;
 const osThreadAttr_t MiddleFinger_Ta_attributes = {
   .name = "MiddleFinger_Ta",
@@ -87,7 +87,7 @@ const osThreadAttr_t MiddleFinger_Ta_attributes = {
 };
 /* Definitions for Ringfinger_Task */
 osThreadId_t Ringfinger_TaskHandle;
-uint32_t Ringfinger_TaskBuffer[ 256 ];
+uint32_t Ringfinger_TaskBuffer[ 128 ];
 osStaticThreadDef_t Ringfinger_TaskControlBlock;
 const osThreadAttr_t Ringfinger_Task_attributes = {
   .name = "Ringfinger_Task",
@@ -99,7 +99,7 @@ const osThreadAttr_t Ringfinger_Task_attributes = {
 };
 /* Definitions for PinkyFinger_tas */
 osThreadId_t PinkyFinger_tasHandle;
-uint32_t PinkyFinger_tasBuffer[ 256 ];
+uint32_t PinkyFinger_tasBuffer[ 128 ];
 osStaticThreadDef_t PinkyFinger_tasControlBlock;
 const osThreadAttr_t PinkyFinger_tas_attributes = {
   .name = "PinkyFinger_tas",
@@ -108,6 +108,18 @@ const osThreadAttr_t PinkyFinger_tas_attributes = {
   .stack_mem = &PinkyFinger_tasBuffer[0],
   .stack_size = sizeof(PinkyFinger_tasBuffer),
   .priority = (osPriority_t) osPriorityNormal4,
+};
+/* Definitions for Communication */
+osThreadId_t CommunicationHandle;
+uint32_t CommunicationBuffer[ 256 ];
+osStaticThreadDef_t CommunicationControlBlock;
+const osThreadAttr_t Communication_attributes = {
+  .name = "Communication",
+  .cb_mem = &CommunicationControlBlock,
+  .cb_size = sizeof(CommunicationControlBlock),
+  .stack_mem = &CommunicationBuffer[0],
+  .stack_size = sizeof(CommunicationBuffer),
+  .priority = (osPriority_t) osPriorityLow,
 };
 
 /* Private function prototypes -----------------------------------------------*/
@@ -120,6 +132,7 @@ void IndexFinger(void *argument);
 void MiddleFinger(void *argument);
 void Ringfinger(void *argument);
 void PinkyFinger(void *argument);
+void CommunicationTask(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -165,6 +178,9 @@ void MX_FREERTOS_Init(void) {
   /* creation of PinkyFinger_tas */
   PinkyFinger_tasHandle = osThreadNew(PinkyFinger, NULL, &PinkyFinger_tas_attributes);
 
+  /* creation of Communication */
+  CommunicationHandle = osThreadNew(CommunicationTask, NULL, &Communication_attributes);
+
   /* USER CODE BEGIN RTOS_THREADS */
 	/* add threads, ... */
   /* USER CODE END RTOS_THREADS */
@@ -190,11 +206,8 @@ void ThumbFinger(void *argument)
 	{
 		if(Fingers_Status.Thumb.Stuck_Finger)
 			Fingers_Status.Thumb.Direction=Stop;
-		SetMotor(Thumb, Fingers_Status.Thumb);
-		__disable_irq();
+		SetMotor(Thumb, &Fingers_Status.Thumb);
 		ADC_ReadCurrent_Thumb();
-		__enable_irq();
-		Read_Encoder(&Fingers_Status.Thumb, Thumb);
 		osDelay(1);
 	}
   /* USER CODE END ThumbFinger */
@@ -215,11 +228,8 @@ void IndexFinger(void *argument)
 	{
 		if(Fingers_Status.Index.Stuck_Finger)
 			Fingers_Status.Index.Direction=Stop;
-		SetMotor(Index, Fingers_Status.Index);
-		__disable_irq();
+		SetMotor(Index, &Fingers_Status.Index);
 		ADC_ReadCurrent_Index();
-		__enable_irq();
-		Read_Encoder(&Fingers_Status.Index, Index);
 		osDelay(1);
 	}
   /* USER CODE END IndexFinger */
@@ -240,11 +250,8 @@ void MiddleFinger(void *argument)
 	{
 		if(Fingers_Status.Middle.Stuck_Finger)
 			Fingers_Status.Middle.Direction=Stop;
-		SetMotor(Middle, Fingers_Status.Middle);
-		__disable_irq();
+		SetMotor(Middle, &Fingers_Status.Middle);
 		ADC_ReadCurrent_Middle();
-		__enable_irq();
-		Read_Encoder(&Fingers_Status.Middle, Middle);
 		osDelay(1);
 	}
   /* USER CODE END MiddleFinger */
@@ -265,11 +272,8 @@ void Ringfinger(void *argument)
 	{
 		if(Fingers_Status.Ring.Stuck_Finger)
 			Fingers_Status.Ring.Direction=Stop;
-		SetMotor(Ring, Fingers_Status.Ring);
-		__disable_irq();
+		SetMotor(Ring, &Fingers_Status.Ring);
 		ADC_ReadCurrent_Ring();
-		__enable_irq();
-		Read_Encoder(&Fingers_Status.Ring, Ring);
 		osDelay(1);
 	}
   /* USER CODE END Ringfinger */
@@ -290,14 +294,29 @@ void PinkyFinger(void *argument)
 	{
 		if(Fingers_Status.Pinky.Stuck_Finger)
 			Fingers_Status.Pinky.Direction=Stop;
-		SetMotor(Pinky, Fingers_Status.Pinky);\
-		__disable_irq();
+		SetMotor(Pinky, &Fingers_Status.Pinky);
 		ADC_ReadCurrent_Pinky();
-		__enable_irq();
-		Read_Encoder(&Fingers_Status.Pinky, Pinky);
 		osDelay(1);
 	}
   /* USER CODE END PinkyFinger */
+}
+
+/* USER CODE BEGIN Header_CommunicationTask */
+/**
+ * @brief Function implementing the Communication thread.
+ * @param argument: Not used
+ * @retval None
+ */
+/* USER CODE END Header_CommunicationTask */
+void CommunicationTask(void *argument)
+{
+  /* USER CODE BEGIN CommunicationTask */
+	/* Infinite loop */
+	for(;;)
+	{
+		osDelay(1);
+	}
+  /* USER CODE END CommunicationTask */
 }
 
 /* Private application code --------------------------------------------------*/

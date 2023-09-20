@@ -138,10 +138,12 @@ void ADC_Select_CH0 (void)
 	  sConfig.Channel = ADC_CHANNEL_0;
 	  sConfig.Rank = ADC_REGULAR_RANK_1;
 	  sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES_5;
+	  __disable_irq();
 	  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
 	  {
 	    Error_Handler();
 	  }
+	  __enable_irq();
 }
 void ADC_ReadCurrent_Pinky()
 {
@@ -151,6 +153,7 @@ void ADC_ReadCurrent_Pinky()
 	Current_motor[1] = HAL_ADC_GetValue(&hadc1);
 	HAL_ADC_Stop(&hadc1);
 	Fingers_Status.Pinky.Current=(Fingers_Status.Pinky.Current+(0.01*Current_motor[1]))/1.01;
+	Current_motor[1]=Fingers_Status.Pinky.Current;
 	if(Fingers_Status.Pinky.Current>3800 || Fingers_Status.Pinky.Current<800)
 		Fingers_Status.Pinky.Stuck_Finger=1;
 	else
@@ -164,10 +167,12 @@ void ADC_Select_CH1 (void)
 	  sConfig.Channel = ADC_CHANNEL_1;
 	  sConfig.Rank = ADC_REGULAR_RANK_1;
 	  sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES_5;
+	  __disable_irq();
 	  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
 	  {
 	    Error_Handler();
 	  }
+	  __enable_irq();
 }
 void ADC_ReadCurrent_Ring()
 {
@@ -177,6 +182,7 @@ void ADC_ReadCurrent_Ring()
 	Current_motor[2] = HAL_ADC_GetValue(&hadc1);
 	HAL_ADC_Stop(&hadc1);
 	Fingers_Status.Ring.Current=(Fingers_Status.Ring.Current+(0.01*Current_motor[2]))/1.01;
+	Current_motor[2]=Fingers_Status.Ring.Current;
 	if(Fingers_Status.Ring.Current>3800 || Fingers_Status.Ring.Current<800)
 		Fingers_Status.Ring.Stuck_Finger=1;
 	else
@@ -190,10 +196,12 @@ void ADC_Select_CH2 (void)
 	  sConfig.Channel = ADC_CHANNEL_2;
 	  sConfig.Rank = ADC_REGULAR_RANK_1;
 	  sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES_5;
+	  __disable_irq();
 	  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
 	  {
 	    Error_Handler();
 	  }
+	  __enable_irq();
 }
 void ADC_ReadCurrent_Middle()
 {
@@ -203,6 +211,7 @@ void ADC_ReadCurrent_Middle()
 	Current_motor[3] = HAL_ADC_GetValue(&hadc1);
 	HAL_ADC_Stop(&hadc1);
 	Fingers_Status.Middle.Current=(Fingers_Status.Middle.Current+(0.01*Current_motor[3]))/1.01;
+	Current_motor[3]=Fingers_Status.Middle.Current;
 	if(Fingers_Status.Middle.Current>3800 || Fingers_Status.Middle.Current<800)
 		Fingers_Status.Middle.Stuck_Finger=1;
 	else
@@ -216,10 +225,12 @@ void ADC_Select_CH3 (void)
 	  sConfig.Channel = ADC_CHANNEL_3;
 	  sConfig.Rank = ADC_REGULAR_RANK_1;
 	  sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES_5;
+	  __disable_irq();
 	  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
 	  {
 	    Error_Handler();
 	  }
+	  __enable_irq();
 }
 void ADC_ReadCurrent_Index()
 {
@@ -229,6 +240,7 @@ void ADC_ReadCurrent_Index()
 	Current_motor[4] = HAL_ADC_GetValue(&hadc1);
 	HAL_ADC_Stop(&hadc1);
 	Fingers_Status.Index.Current=(Fingers_Status.Index.Current+(0.01*Current_motor[4]))/1.01;
+	Current_motor[4]=Fingers_Status.Index.Current;
 	if(Fingers_Status.Index.Current>3800 || Fingers_Status.Index.Current<800)
 		Fingers_Status.Index.Stuck_Finger=1;
 	else
@@ -242,10 +254,12 @@ void ADC_Select_CH4 (void)
 	  sConfig.Channel = ADC_CHANNEL_4;
 	  sConfig.Rank = ADC_REGULAR_RANK_1;
 	  sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES_5;
+	  __disable_irq();
 	  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
 	  {
 	    Error_Handler();
 	  }
+	  __enable_irq();
 }
 void ADC_ReadCurrent_Thumb()
 {
@@ -255,6 +269,7 @@ void ADC_ReadCurrent_Thumb()
 	Current_motor[5] = HAL_ADC_GetValue(&hadc1);
 	HAL_ADC_Stop(&hadc1);
 	Fingers_Status.Thumb.Current=(Fingers_Status.Thumb.Current+(0.01*Current_motor[5]))/1.01;
+	Current_motor[5]=Fingers_Status.Thumb.Current;
 	if(Fingers_Status.Thumb.Current>3800 || Fingers_Status.Thumb.Current<800)
 		Fingers_Status.Thumb.Stuck_Finger=1;
 	else
@@ -268,9 +283,11 @@ void ADC_Select_CH5 (void)
 	  sConfig.Channel = ADC_CHANNEL_5;
 	  sConfig.Rank = ADC_REGULAR_RANK_1;
 	  sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES_5;
+	  __disable_irq();
 	  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
 	  {
 	    Error_Handler();
 	  }
+	  __enable_irq();
 }
 /* USER CODE END 1 */

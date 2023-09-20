@@ -1,6 +1,7 @@
-../Core/Src/freertos.c:131:6:MX_FREERTOS_Init	1
-../Core/Src/freertos.c:185:6:ThumbFinger	2
-../Core/Src/freertos.c:210:6:IndexFinger	2
-../Core/Src/freertos.c:235:6:MiddleFinger	2
-../Core/Src/freertos.c:260:6:Ringfinger	2
-../Core/Src/freertos.c:285:6:PinkyFinger	2
+../Core/Src/freertos.c:144:6:MX_FREERTOS_Init	1
+../Core/Src/freertos.c:201:6:ThumbFinger	2
+../Core/Src/freertos.c:223:6:IndexFinger	2
+../Core/Src/freertos.c:245:6:MiddleFinger	2
+../Core/Src/freertos.c:267:6:Ringfinger	2
+../Core/Src/freertos.c:289:6:PinkyFinger	2
+../Core/Src/freertos.c:311:6:CommunicationTask	1

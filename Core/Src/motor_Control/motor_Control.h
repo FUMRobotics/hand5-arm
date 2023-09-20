@@ -9,6 +9,12 @@
 #define SRC_MOTOR_CONTROL_MOTOR_CONTROL_H_
 #include "main.h"
 
+//---------------- Defines ---------------------
+#define Max_Encoder_Index               27300
+#define Max_Encoder_Middle              28700
+#define Max_Encoder_Ring                27600
+#define Max_Encoder_Pinky               26100
+#define Max_Encoder_Thumb               1	 //must be measured after mechanical part fixed
 //-------------- enumeration -------------------
 typedef enum
 {
@@ -34,9 +40,9 @@ typedef enum
 //-------------- structure -------------------
 typedef struct
 {
-	uint8_t SetPoint;
-	uint8_t position;
-	uint32_t Encoder;
+	float SetPoint;
+	float position;
+	uint16_t Encoder;
 	Move_Direction_Enum Direction;
 	Encoder_State_Enum current_Encoder_State;
 	Encoder_State_Enum Pre_Encoder_State;
@@ -60,6 +66,6 @@ extern uint8_t ManualControl;
 extern uint32_t Current_motor[6];
 //-------------- function prototype -------------------
 void Read_Encoder (Finger_Struct* FingerStruct,Fingers_Name_Enum FingerName);
-void SetMotor(Fingers_Name_Enum name,Finger_Struct  FingerStruct);
+void SetMotor(Fingers_Name_Enum name,Finger_Struct*  FingerStruct);
 void init_motor_controller(void);
 #endif /* SRC_MOTOR_CONTROL_MOTOR_CONTROL_H_ */
