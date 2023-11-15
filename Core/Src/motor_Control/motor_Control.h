@@ -48,7 +48,7 @@ typedef struct
 	Encoder_State_Enum Pre_Encoder_State;
 	_Bool Stuck_Finger;
 	uint8_t speed;
-	uint32_t Current;
+	uint16_t Current;
 	volatile _Bool SignalA;
 	volatile _Bool SignalB;
 }Finger_Struct;

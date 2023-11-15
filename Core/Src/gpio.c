@@ -136,7 +136,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 					//for remove integration error in read encoder
 					if(Fingers_Status.Pinky.Encoder>Max_Encoder_Pinky)
 						Fingers_Status.Pinky.Encoder=Max_Encoder_Pinky;
-						break;
+					break;
 				case Close:
 					Fingers_Status.Pinky.Encoder--;
 					//for remove integration error in read encoder

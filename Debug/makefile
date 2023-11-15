@@ -68,7 +68,7 @@ main-build: hand5linky_newBoard.elf secondary-outputs
 
 # Tool invocations
 hand5linky_newBoard.elf hand5linky_newBoard.map: $(OBJS) $(USER_OBJS) D:\project\stm32\hand\ newboard\STM32F103RBTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "hand5linky_newBoard.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"D:\project\stm32\hand newboard\STM32F103RBTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="hand5linky_newBoard.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+	arm-none-eabi-gcc -o "hand5linky_newBoard.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"D:\project\stm32\hand newboard\STM32F103RBTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="hand5linky_newBoard.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

@@ -1,0 +1,6 @@
+../Core/Src/EEprom/eeprom.c:306:10:EE_VerifyPageFullyErased	3
+../Core/Src/EEprom/eeprom.c:550:17:EE_VerifyPageFullWriteVariable	6
+../Core/Src/EEprom/eeprom.c:427:26:EE_Format	5
+../Core/Src/EEprom/eeprom.c:344:10:EE_ReadVariable	5
+../Core/Src/EEprom/eeprom.c:53:10:EE_Init	40
+../Core/Src/EEprom/eeprom.c:403:10:EE_WriteVariable	12
