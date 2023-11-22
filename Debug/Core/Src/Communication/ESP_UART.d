@@ -1,5 +1,5 @@
-Core/Src/Communication/ESP8266_UART.o: \
- ../Core/Src/Communication/ESP8266_UART.c ../Core/Inc/main.h \
+Core/Src/Communication/ESP_UART.o: ../Core/Src/Communication/ESP_UART.c \
+ ../Core/Src/Communication/ESP_UART.h ../Core/Inc/main.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h \
  ../Core/Inc/stm32f1xx_hal_conf.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h \
@@ -27,9 +27,9 @@ Core/Src/Communication/ESP8266_UART.o: \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h \
- ../Core/Src/Communication/ESP8266_UART.h \
  ../Core/Src/motor_Control/motor_Control.h ../Core/Inc/usart.h \
  ../Core/Inc/main.h
+../Core/Src/Communication/ESP_UART.h:
 ../Core/Inc/main.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:
 ../Core/Inc/stm32f1xx_hal_conf.h:
@@ -58,7 +58,6 @@ Core/Src/Communication/ESP8266_UART.o: \
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:
-../Core/Src/Communication/ESP8266_UART.h:
 ../Core/Src/motor_Control/motor_Control.h:
 ../Core/Inc/usart.h:
 ../Core/Inc/main.h:

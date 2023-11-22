@@ -1,4 +1,4 @@
-"./Core/Src/Communication/ESP8266_UART.o"
+"./Core/Src/Communication/ESP_UART.o"
 "./Core/Src/EEprom/eeprom.o"
 "./Core/Src/adc.o"
 "./Core/Src/can.o"

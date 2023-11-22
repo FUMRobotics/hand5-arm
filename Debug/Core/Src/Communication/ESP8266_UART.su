@@ -1,2 +1,0 @@
-../Core/Src/Communication/ESP8266_UART.c:31:6:ProcessUartData	16	static
-../Core/Src/Communication/ESP8266_UART.c:48:6:HAL_UART_RxCpltCallback	24	static

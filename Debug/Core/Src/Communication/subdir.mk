@@ -5,13 +5,13 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../Core/Src/Communication/ESP8266_UART.c 
+../Core/Src/Communication/ESP_UART.c 
 
 OBJS += \
-./Core/Src/Communication/ESP8266_UART.o 
+./Core/Src/Communication/ESP_UART.o 
 
 C_DEPS += \
-./Core/Src/Communication/ESP8266_UART.d 
+./Core/Src/Communication/ESP_UART.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -21,7 +21,7 @@ Core/Src/Communication/%.o Core/Src/Communication/%.su Core/Src/Communication/%.
 clean: clean-Core-2f-Src-2f-Communication
 
 clean-Core-2f-Src-2f-Communication:
-	-$(RM) ./Core/Src/Communication/ESP8266_UART.cyclo ./Core/Src/Communication/ESP8266_UART.d ./Core/Src/Communication/ESP8266_UART.o ./Core/Src/Communication/ESP8266_UART.su
+	-$(RM) ./Core/Src/Communication/ESP_UART.cyclo ./Core/Src/Communication/ESP_UART.d ./Core/Src/Communication/ESP_UART.o ./Core/Src/Communication/ESP_UART.su
 
 .PHONY: clean-Core-2f-Src-2f-Communication
 

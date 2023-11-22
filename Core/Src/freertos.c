@@ -29,6 +29,8 @@
 #include "motor_Control.h"
 #include "usart.h"
 #include "stdio.h"
+#include "ESP_UART.h"
+#include "string.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -313,14 +315,14 @@ void PinkyFinger(void *argument)
 void CommunicationTask(void *argument)
 {
   /* USER CODE BEGIN CommunicationTask */
-	char uartTX[100];
+	char uartTX[45];
 	/* Infinite loop */
 	for(;;)
 	{
-		sprintf(uartTX,"{CP:%dCR:%dCM:%dCI:%dCT:%d}",Fingers_Status.Pinky.Current,Fingers_Status.Ring.Current,Fingers_Status.Middle.Current,Fingers_Status.Index.Current,Fingers_Status.Thumb.Current);
-		HAL_UART_Transmit(&huart1, (uint8_t*)uartTX, sizeof(uartTX), 1);
-		sprintf(uartTX,"{PP:%fPR:%fPM:%fPI:%fPT:%f}",Fingers_Status.Pinky.position,Fingers_Status.Ring.position,Fingers_Status.Middle.position,Fingers_Status.Index.position,Fingers_Status.Thumb.position);
-		HAL_UART_Transmit(&huart1, (uint8_t*)uartTX, sizeof(uartTX), 1);
+		sprintf(uartTX,"{CP:%dCR:%dCM:%dCI:%dCT:%d}\n",Fingers_Status.Pinky.Current,Fingers_Status.Ring.Current,Fingers_Status.Middle.Current,Fingers_Status.Index.Current,Fingers_Status.Thumb.Current);
+		HAL_UART_Transmit(&huart1, (uint8_t*)uartTX, strlen(uartTX), 5);
+		sprintf(uartTX,"{PP:%.2fPR:%.2fPM:%.2fPI:%.2fPT:%.2f}\n",Fingers_Status.Pinky.position,Fingers_Status.Ring.position,Fingers_Status.Middle.position,Fingers_Status.Index.position,Fingers_Status.Thumb.position);
+		HAL_UART_Transmit(&huart1, (uint8_t*)uartTX, strlen(uartTX), 5);
 		osDelay(1);
 	}
   /* USER CODE END CommunicationTask */

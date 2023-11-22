@@ -1,0 +1,3 @@
+../Core/Src/Communication/ESP_UART.c:33:6:ProcessUartData	16	static
+../Core/Src/Communication/ESP_UART.c:50:6:HAL_UART_RxCpltCallback	24	static
+../Core/Src/Communication/ESP_UART.c:68:6:HAL_UART_TxCpltCallback	16	static

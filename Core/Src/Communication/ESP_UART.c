@@ -7,9 +7,9 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include <ESP_UART.h>
 #include "main.h"
 #include "stm32f1xx.h"
-#include "ESP8266_UART.h"
 #include "string.h"
 #include "motor_Control.h"
 #include "usart.h"
@@ -22,6 +22,8 @@
 uint16_t uartCounter = 0;
 char uartRecieveBuffer[150];
 uint8_t RXuart=0;
+UartTransmit_Enum TX_State;
+send_Feedback_enum DataTypeFeedback;
 /* USER CODE END PV */
 
 
@@ -60,5 +62,14 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 		HAL_UART_Receive_IT(&huart1, &RXuart, 1);
 	}
 }
-
+/*
+ * Function2--------------------------
+*/
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
+{
+	if(huart->Instance == USART1)
+	{
+		TX_State=idel;
+	}
+}
 /* USER CODE END PV */

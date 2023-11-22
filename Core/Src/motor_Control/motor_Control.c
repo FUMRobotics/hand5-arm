@@ -5,11 +5,11 @@
  *      Author: Lenovo
  */
 
+#include <ESP_UART.h>
 #include "motor_Control.h"
 #include "PID.h"
 #include "tim.h"
 #include "adc.h"
-#include "ESP8266_UART.h"
 #include "usart.h"
 //-------------- variable -------------------
 Fingers_Struct Fingers_Status;
@@ -224,6 +224,7 @@ void init_motor_controller(void)
 	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
 	HAL_ADC_MspInit(&hadc1);
 	HAL_UART_Receive_IT(&huart1, &RXuart, 1);
+	TX_State=idel;
 	// Configure settings
 	controller.AntiWindup = ENABLED;
 	controller.Bumpless = ENABLED;
