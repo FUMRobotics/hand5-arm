@@ -34,25 +34,21 @@ extern "C" {
 
 extern ADC_HandleTypeDef hadc1;
 
+extern ADC_HandleTypeDef hadc2;
+
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
 
 void MX_ADC1_Init(void);
+void MX_ADC2_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-void ADC_Select_CH0 (void);
-void ADC_ReadCurrent_Pinky();
-void ADC_Select_CH1 (void);
-void ADC_ReadCurrent_Ring();
-void ADC_Select_CH2 (void);
-void ADC_ReadCurrent_Middle();
-void ADC_Select_CH3 (void);
-void ADC_ReadCurrent_Index();
-void ADC_Select_CH4 (void);
 void ADC_ReadCurrent_Thumb();
-
-void ADC_Select_CH5 (void);
+void ADC_ReadCurrent_Index();
+void ADC_ReadCurrent_Middle();
+void ADC_ReadCurrent_Pinky();
+void ADC_ReadCurrent_Ring();
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

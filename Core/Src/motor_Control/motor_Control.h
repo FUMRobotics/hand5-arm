@@ -2,7 +2,7 @@
  * motor_Control.h
  *
  *  Created on: Sep 14, 2023
- *      Author: Lenovo
+ *      Author: taji
  */
 
 #ifndef SRC_MOTOR_CONTROL_MOTOR_CONTROL_H_

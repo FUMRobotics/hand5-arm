@@ -10,13 +10,12 @@ RM := rm -rf
 # All of the sources participating in the build are defined here
 -include sources.mk
 -include Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/subdir.mk
--include Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM3/subdir.mk
+-include Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/subdir.mk
 -include Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/subdir.mk
 -include Middlewares/Third_Party/FreeRTOS/Source/subdir.mk
--include Drivers/STM32F1xx_HAL_Driver/Src/subdir.mk
+-include Drivers/STM32L4xx_HAL_Driver/Src/subdir.mk
 -include Core/Startup/subdir.mk
 -include Core/Src/motor_Control/subdir.mk
--include Core/Src/EEprom/subdir.mk
 -include Core/Src/Communication/subdir.mk
 -include Core/Src/subdir.mk
 -include objects.mk
@@ -41,34 +40,34 @@ $(wildcard ../makefile.init) \
 $(wildcard ../makefile.targets) \
 
 
-BUILD_ARTIFACT_NAME := hand5linky_newBoard
+BUILD_ARTIFACT_NAME := Hand_Lmcu
 BUILD_ARTIFACT_EXTENSION := elf
 BUILD_ARTIFACT_PREFIX :=
 BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME)$(if $(BUILD_ARTIFACT_EXTENSION),.$(BUILD_ARTIFACT_EXTENSION),)
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXECUTABLES += \
-hand5linky_newBoard.elf \
+Hand_Lmcu.elf \
 
 MAP_FILES += \
-hand5linky_newBoard.map \
+Hand_Lmcu.map \
 
 SIZE_OUTPUT += \
 default.size.stdout \
 
 OBJDUMP_LIST += \
-hand5linky_newBoard.list \
+Hand_Lmcu.list \
 
 
 # All Target
 all: main-build
 
 # Main-build Target
-main-build: hand5linky_newBoard.elf secondary-outputs
+main-build: Hand_Lmcu.elf secondary-outputs
 
 # Tool invocations
-hand5linky_newBoard.elf hand5linky_newBoard.map: $(OBJS) $(USER_OBJS) D:\project\stm32\hand\ newboard\STM32F103RBTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "hand5linky_newBoard.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"D:\project\stm32\hand newboard\STM32F103RBTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="hand5linky_newBoard.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
+Hand_Lmcu.elf Hand_Lmcu.map: $(OBJS) $(USER_OBJS) D:\project\stm32\Hand_Lmcu\STM32L476RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "Hand_Lmcu.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"D:\project\stm32\Hand_Lmcu\STM32L476RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Hand_Lmcu.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -77,14 +76,14 @@ default.size.stdout: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-hand5linky_newBoard.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "hand5linky_newBoard.list"
+Hand_Lmcu.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "Hand_Lmcu.list"
 	@echo 'Finished building: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) default.size.stdout hand5linky_newBoard.elf hand5linky_newBoard.list hand5linky_newBoard.map
+	-$(RM) Hand_Lmcu.elf Hand_Lmcu.list Hand_Lmcu.map default.size.stdout
 	-@echo ' '
 
 secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)

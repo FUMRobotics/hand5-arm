@@ -31,6 +31,7 @@
 #include "stdio.h"
 #include "ESP_UART.h"
 #include "string.h"
+#include "usart.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -53,69 +54,69 @@ typedef StaticTask_t osStaticThreadDef_t;
 /* USER CODE BEGIN Variables */
 
 /* USER CODE END Variables */
-/* Definitions for ThumbFinger_Tas */
-osThreadId_t ThumbFinger_TasHandle;
-uint32_t ThumbFinger_TasBuffer[ 128 ];
-osStaticThreadDef_t ThumbFinger_TasControlBlock;
-const osThreadAttr_t ThumbFinger_Tas_attributes = {
-  .name = "ThumbFinger_Tas",
-  .cb_mem = &ThumbFinger_TasControlBlock,
-  .cb_size = sizeof(ThumbFinger_TasControlBlock),
-  .stack_mem = &ThumbFinger_TasBuffer[0],
-  .stack_size = sizeof(ThumbFinger_TasBuffer),
+/* Definitions for ThumbFinger_T */
+osThreadId_t ThumbFinger_THandle;
+uint32_t ThumbFinger_TBuffer[ 128 ];
+osStaticThreadDef_t ThumbFinger_TControlBlock;
+const osThreadAttr_t ThumbFinger_T_attributes = {
+  .name = "ThumbFinger_T",
+  .cb_mem = &ThumbFinger_TControlBlock,
+  .cb_size = sizeof(ThumbFinger_TControlBlock),
+  .stack_mem = &ThumbFinger_TBuffer[0],
+  .stack_size = sizeof(ThumbFinger_TBuffer),
   .priority = (osPriority_t) osPriorityNormal,
 };
-/* Definitions for IndexFinger_Tas */
-osThreadId_t IndexFinger_TasHandle;
-uint32_t IndexFinger_TasBuffer[ 128 ];
-osStaticThreadDef_t IndexFinger_TasControlBlock;
-const osThreadAttr_t IndexFinger_Tas_attributes = {
-  .name = "IndexFinger_Tas",
-  .cb_mem = &IndexFinger_TasControlBlock,
-  .cb_size = sizeof(IndexFinger_TasControlBlock),
-  .stack_mem = &IndexFinger_TasBuffer[0],
-  .stack_size = sizeof(IndexFinger_TasBuffer),
-  .priority = (osPriority_t) osPriorityNormal6,
+/* Definitions for IndexFinger_T */
+osThreadId_t IndexFinger_THandle;
+uint32_t IndexFinger_TBuffer[ 128 ];
+osStaticThreadDef_t IndexFinger_TControlBlock;
+const osThreadAttr_t IndexFinger_T_attributes = {
+  .name = "IndexFinger_T",
+  .cb_mem = &IndexFinger_TControlBlock,
+  .cb_size = sizeof(IndexFinger_TControlBlock),
+  .stack_mem = &IndexFinger_TBuffer[0],
+  .stack_size = sizeof(IndexFinger_TBuffer),
+  .priority = (osPriority_t) osPriorityLow,
 };
-/* Definitions for MiddleFinger_Ta */
-osThreadId_t MiddleFinger_TaHandle;
-uint32_t MiddleFinger_TaBuffer[ 128 ];
-osStaticThreadDef_t MiddleFinger_TaControlBlock;
-const osThreadAttr_t MiddleFinger_Ta_attributes = {
-  .name = "MiddleFinger_Ta",
-  .cb_mem = &MiddleFinger_TaControlBlock,
-  .cb_size = sizeof(MiddleFinger_TaControlBlock),
-  .stack_mem = &MiddleFinger_TaBuffer[0],
-  .stack_size = sizeof(MiddleFinger_TaBuffer),
-  .priority = (osPriority_t) osPriorityNormal2,
+/* Definitions for MiddleFinger_T */
+osThreadId_t MiddleFinger_THandle;
+uint32_t MiddleFinger_TBuffer[ 128 ];
+osStaticThreadDef_t MiddleFinger_TControlBlock;
+const osThreadAttr_t MiddleFinger_T_attributes = {
+  .name = "MiddleFinger_T",
+  .cb_mem = &MiddleFinger_TControlBlock,
+  .cb_size = sizeof(MiddleFinger_TControlBlock),
+  .stack_mem = &MiddleFinger_TBuffer[0],
+  .stack_size = sizeof(MiddleFinger_TBuffer),
+  .priority = (osPriority_t) osPriorityLow,
 };
-/* Definitions for Ringfinger_Task */
-osThreadId_t Ringfinger_TaskHandle;
-uint32_t Ringfinger_TaskBuffer[ 128 ];
-osStaticThreadDef_t Ringfinger_TaskControlBlock;
-const osThreadAttr_t Ringfinger_Task_attributes = {
-  .name = "Ringfinger_Task",
-  .cb_mem = &Ringfinger_TaskControlBlock,
-  .cb_size = sizeof(Ringfinger_TaskControlBlock),
-  .stack_mem = &Ringfinger_TaskBuffer[0],
-  .stack_size = sizeof(Ringfinger_TaskBuffer),
-  .priority = (osPriority_t) osPriorityNormal3,
+/* Definitions for RingFinger_T */
+osThreadId_t RingFinger_THandle;
+uint32_t RingFinger_TBuffer[ 128 ];
+osStaticThreadDef_t RingFinger_TControlBlock;
+const osThreadAttr_t RingFinger_T_attributes = {
+  .name = "RingFinger_T",
+  .cb_mem = &RingFinger_TControlBlock,
+  .cb_size = sizeof(RingFinger_TControlBlock),
+  .stack_mem = &RingFinger_TBuffer[0],
+  .stack_size = sizeof(RingFinger_TBuffer),
+  .priority = (osPriority_t) osPriorityLow,
 };
-/* Definitions for PinkyFinger_tas */
-osThreadId_t PinkyFinger_tasHandle;
-uint32_t PinkyFinger_tasBuffer[ 128 ];
-osStaticThreadDef_t PinkyFinger_tasControlBlock;
-const osThreadAttr_t PinkyFinger_tas_attributes = {
-  .name = "PinkyFinger_tas",
-  .cb_mem = &PinkyFinger_tasControlBlock,
-  .cb_size = sizeof(PinkyFinger_tasControlBlock),
-  .stack_mem = &PinkyFinger_tasBuffer[0],
-  .stack_size = sizeof(PinkyFinger_tasBuffer),
-  .priority = (osPriority_t) osPriorityNormal4,
+/* Definitions for PinkyFinger_T */
+osThreadId_t PinkyFinger_THandle;
+uint32_t PinkyFinger_TBuffer[ 128 ];
+osStaticThreadDef_t PinkyFinger_TControlBlock;
+const osThreadAttr_t PinkyFinger_T_attributes = {
+  .name = "PinkyFinger_T",
+  .cb_mem = &PinkyFinger_TControlBlock,
+  .cb_size = sizeof(PinkyFinger_TControlBlock),
+  .stack_mem = &PinkyFinger_TBuffer[0],
+  .stack_size = sizeof(PinkyFinger_TBuffer),
+  .priority = (osPriority_t) osPriorityLow,
 };
 /* Definitions for Communication */
 osThreadId_t CommunicationHandle;
-uint32_t CommunicationBuffer[ 256 ];
+uint32_t CommunicationBuffer[ 128 ];
 osStaticThreadDef_t CommunicationControlBlock;
 const osThreadAttr_t Communication_attributes = {
   .name = "Communication",
@@ -134,7 +135,7 @@ const osThreadAttr_t Communication_attributes = {
 void ThumbFinger(void *argument);
 void IndexFinger(void *argument);
 void MiddleFinger(void *argument);
-void Ringfinger(void *argument);
+void RingFinger(void *argument);
 void PinkyFinger(void *argument);
 void CommunicationTask(void *argument);
 
@@ -167,20 +168,20 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
-  /* creation of ThumbFinger_Tas */
-  ThumbFinger_TasHandle = osThreadNew(ThumbFinger, NULL, &ThumbFinger_Tas_attributes);
+  /* creation of ThumbFinger_T */
+  ThumbFinger_THandle = osThreadNew(ThumbFinger, NULL, &ThumbFinger_T_attributes);
 
-  /* creation of IndexFinger_Tas */
-  IndexFinger_TasHandle = osThreadNew(IndexFinger, NULL, &IndexFinger_Tas_attributes);
+  /* creation of IndexFinger_T */
+  IndexFinger_THandle = osThreadNew(IndexFinger, NULL, &IndexFinger_T_attributes);
 
-  /* creation of MiddleFinger_Ta */
-  MiddleFinger_TaHandle = osThreadNew(MiddleFinger, NULL, &MiddleFinger_Ta_attributes);
+  /* creation of MiddleFinger_T */
+  MiddleFinger_THandle = osThreadNew(MiddleFinger, NULL, &MiddleFinger_T_attributes);
 
-  /* creation of Ringfinger_Task */
-  Ringfinger_TaskHandle = osThreadNew(Ringfinger, NULL, &Ringfinger_Task_attributes);
+  /* creation of RingFinger_T */
+  RingFinger_THandle = osThreadNew(RingFinger, NULL, &RingFinger_T_attributes);
 
-  /* creation of PinkyFinger_tas */
-  PinkyFinger_tasHandle = osThreadNew(PinkyFinger, NULL, &PinkyFinger_tas_attributes);
+  /* creation of PinkyFinger_T */
+  PinkyFinger_THandle = osThreadNew(PinkyFinger, NULL, &PinkyFinger_T_attributes);
 
   /* creation of Communication */
   CommunicationHandle = osThreadNew(CommunicationTask, NULL, &Communication_attributes);
@@ -197,7 +198,7 @@ void MX_FREERTOS_Init(void) {
 
 /* USER CODE BEGIN Header_ThumbFinger */
 /**
- * @brief  Function implementing the ThumbFinger_Tas thread.
+ * @brief  Function implementing the ThumbFinger_T thread.
  * @param  argument: Not used
  * @retval None
  */
@@ -219,7 +220,7 @@ void ThumbFinger(void *argument)
 
 /* USER CODE BEGIN Header_IndexFinger */
 /**
- * @brief Function implementing the IndexFinger_Tas thread.
+ * @brief Function implementing the IndexFinger_T thread.
  * @param argument: Not used
  * @retval None
  */
@@ -241,7 +242,7 @@ void IndexFinger(void *argument)
 
 /* USER CODE BEGIN Header_MiddleFinger */
 /**
- * @brief Function implementing the MiddleFinger_Ta thread.
+ * @brief Function implementing the MiddleFinger_T thread.
  * @param argument: Not used
  * @retval None
  */
@@ -261,16 +262,16 @@ void MiddleFinger(void *argument)
   /* USER CODE END MiddleFinger */
 }
 
-/* USER CODE BEGIN Header_Ringfinger */
+/* USER CODE BEGIN Header_RingFinger */
 /**
- * @brief Function implementing the Ringfinger_Task thread.
+ * @brief Function implementing the RingFinger_T thread.
  * @param argument: Not used
  * @retval None
  */
-/* USER CODE END Header_Ringfinger */
-void Ringfinger(void *argument)
+/* USER CODE END Header_RingFinger */
+void RingFinger(void *argument)
 {
-  /* USER CODE BEGIN Ringfinger */
+  /* USER CODE BEGIN RingFinger */
 	/* Infinite loop */
 	for(;;)
 	{
@@ -280,12 +281,12 @@ void Ringfinger(void *argument)
 		ADC_ReadCurrent_Ring();
 		osDelay(1);
 	}
-  /* USER CODE END Ringfinger */
+  /* USER CODE END RingFinger */
 }
 
 /* USER CODE BEGIN Header_PinkyFinger */
 /**
- * @brief Function implementing the PinkyFinger_tas thread.
+ * @brief Function implementing the PinkyFinger_T thread.
  * @param argument: Not used
  * @retval None
  */
@@ -315,14 +316,14 @@ void PinkyFinger(void *argument)
 void CommunicationTask(void *argument)
 {
   /* USER CODE BEGIN CommunicationTask */
-	char uartTX[45];
+	char uartTX[50];
 	/* Infinite loop */
 	for(;;)
 	{
 		sprintf(uartTX,"{CP:%dCR:%dCM:%dCI:%dCT:%d}\n",Fingers_Status.Pinky.Current,Fingers_Status.Ring.Current,Fingers_Status.Middle.Current,Fingers_Status.Index.Current,Fingers_Status.Thumb.Current);
-		HAL_UART_Transmit(&huart1, (uint8_t*)uartTX, strlen(uartTX), 5);
+		HAL_UART_Transmit(&huart4, (uint8_t*)uartTX, strlen(uartTX), 5);
 		sprintf(uartTX,"{PP:%.2fPR:%.2fPM:%.2fPI:%.2fPT:%.2f}\n",Fingers_Status.Pinky.position,Fingers_Status.Ring.position,Fingers_Status.Middle.position,Fingers_Status.Index.position,Fingers_Status.Thumb.position);
-		HAL_UART_Transmit(&huart1, (uint8_t*)uartTX, strlen(uartTX), 5);
+		HAL_UART_Transmit(&huart4, (uint8_t*)uartTX, strlen(uartTX), 5);
 		osDelay(1);
 	}
   /* USER CODE END CommunicationTask */

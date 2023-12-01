@@ -2,15 +2,12 @@
  * ESP8266_UART.c
  *
  *  Created on: May 9, 2023
- *      Author: NEW
+ *      Author: taji
  */
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include <ESP_UART.h>
-#include "main.h"
-#include "stm32f1xx.h"
-#include "string.h"
+#include "ESP_UART.h"
 #include "motor_Control.h"
 #include "usart.h"
 #include <stdio.h>
@@ -59,7 +56,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 				uartRecieveBuffer[cleanCounter]=0;
 		}
 		uartCounter++;
-		HAL_UART_Receive_IT(&huart1, &RXuart, 1);
+		HAL_UART_Receive_IT(&huart4, &RXuart, 1);
 	}
 }
 /*
