@@ -209,8 +209,8 @@ void ThumbFinger(void *argument)
 	/* Infinite loop */
 	for(;;)
 	{
-		if(Fingers_Status.Thumb.Stuck_Finger)
-			Fingers_Status.Thumb.Direction=Stop;
+		////if(Fingers_Status.Thumb.Stuck_Finger)
+//			Fingers_Status.Thumb.Direction=Stop;
 		SetMotor(Thumb, &Fingers_Status.Thumb);
 		ADC_ReadCurrent_Thumb();
 		osDelay(1);
@@ -231,8 +231,8 @@ void IndexFinger(void *argument)
 	/* Infinite loop */
 	for(;;)
 	{
-		if(Fingers_Status.Index.Stuck_Finger)
-			Fingers_Status.Index.Direction=Stop;
+		////if(Fingers_Status.Index.Stuck_Finger)
+//			Fingers_Status.Index.Direction=Stop;
 		SetMotor(Index, &Fingers_Status.Index);
 		ADC_ReadCurrent_Index();
 		osDelay(1);
@@ -253,8 +253,8 @@ void MiddleFinger(void *argument)
 	/* Infinite loop */
 	for(;;)
 	{
-		if(Fingers_Status.Middle.Stuck_Finger)
-			Fingers_Status.Middle.Direction=Stop;
+		////if(Fingers_Status.Middle.Stuck_Finger)
+//			Fingers_Status.Middle.Direction=Stop;
 		SetMotor(Middle, &Fingers_Status.Middle);
 		ADC_ReadCurrent_Middle();
 		osDelay(1);
@@ -275,8 +275,8 @@ void RingFinger(void *argument)
 	/* Infinite loop */
 	for(;;)
 	{
-		if(Fingers_Status.Ring.Stuck_Finger)
-			Fingers_Status.Ring.Direction=Stop;
+		////if(Fingers_Status.Ring.Stuck_Finger)
+//			Fingers_Status.Ring.Direction=Stop;
 		SetMotor(Ring, &Fingers_Status.Ring);
 		ADC_ReadCurrent_Ring();
 		osDelay(1);
@@ -297,8 +297,8 @@ void PinkyFinger(void *argument)
 	/* Infinite loop */
 	for(;;)
 	{
-		if(Fingers_Status.Pinky.Stuck_Finger)
-			Fingers_Status.Pinky.Direction=Stop;
+		////if(Fingers_Status.Pinky.Stuck_Finger)
+//			Fingers_Status.Pinky.Direction=Stop;
 		SetMotor(Pinky, &Fingers_Status.Pinky);
 		ADC_ReadCurrent_Pinky();
 		osDelay(1);
@@ -322,7 +322,8 @@ void CommunicationTask(void *argument)
 	{
 		sprintf(uartTX,"{CP:%dCR:%dCM:%dCI:%dCT:%d}\n",Fingers_Status.Pinky.Current,Fingers_Status.Ring.Current,Fingers_Status.Middle.Current,Fingers_Status.Index.Current,Fingers_Status.Thumb.Current);
 		HAL_UART_Transmit(&huart4, (uint8_t*)uartTX, strlen(uartTX), 5);
-		sprintf(uartTX,"{PP:%.2fPR:%.2fPM:%.2fPI:%.2fPT:%.2f}\n",Fingers_Status.Pinky.position,Fingers_Status.Ring.position,Fingers_Status.Middle.position,Fingers_Status.Index.position,Fingers_Status.Thumb.position);
+		osDelay(1);
+		sprintf(uartTX,"{PP:%dPR:%dPM:%dPI:%dPT:%d}\n",((uint16_t)(Fingers_Status.Pinky.position*100)),((uint16_t)(Fingers_Status.Ring.position*100)),((uint16_t)(Fingers_Status.Middle.position*100)),((uint16_t)(Fingers_Status.Index.position*100)),((uint16_t)(Fingers_Status.Thumb.position*100)));
 		HAL_UART_Transmit(&huart4, (uint8_t*)uartTX, strlen(uartTX), 5);
 		osDelay(1);
 	}

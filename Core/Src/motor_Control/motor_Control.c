@@ -127,16 +127,16 @@ void SetMotor(Fingers_Name_Enum name,Finger_Struct* FingerStruct) {
 		if ( FingerStruct->Direction== Open) {
 			htim3.Instance->CCR1 = FingerStruct->speed;
 			htim3.Instance->CCR2 =0;
-			HAL_GPIO_WritePin(IN1_Motor5_GPIO_Port, IN1_Motor5_Pin,1);
+			HAL_GPIO_WritePin(IN1_Motor5_GPIO_Port, IN1_Motor5_Pin,0);
 		} else if (FingerStruct->Direction == Close) {
 			htim3.Instance->CCR2 = FingerStruct->speed;
 			htim3.Instance->CCR1 =0;
-			HAL_GPIO_WritePin(IN2_Motor5_GPIO_Port, IN2_Motor5_Pin,1);
+			HAL_GPIO_WritePin(IN2_Motor5_GPIO_Port, IN2_Motor5_Pin,0);
 		} else {
 			htim3.Instance->CCR1 =0;
 			htim3.Instance->CCR2 =0;
-			HAL_GPIO_WritePin(IN2_Motor5_GPIO_Port, IN2_Motor5_Pin,1);
-			HAL_GPIO_WritePin(IN1_Motor5_GPIO_Port, IN1_Motor5_Pin,1);
+			HAL_GPIO_WritePin(IN2_Motor5_GPIO_Port, IN2_Motor5_Pin,0);
+			HAL_GPIO_WritePin(IN1_Motor5_GPIO_Port, IN1_Motor5_Pin,0);
 		}
 		//calculate position
 		FingerStruct->position=((float)FingerStruct->Encoder/Max_Encoder_Thumb)*100;
@@ -145,16 +145,16 @@ void SetMotor(Fingers_Name_Enum name,Finger_Struct* FingerStruct) {
 		if ( FingerStruct->Direction== Open) {
 			htim4.Instance->CCR1 = FingerStruct->speed;
 			htim4.Instance->CCR2 =0;
-			HAL_GPIO_WritePin(IN1_Motor4_GPIO_Port, IN1_Motor4_Pin,1);
+			HAL_GPIO_WritePin(IN1_Motor4_GPIO_Port, IN1_Motor4_Pin,0);
 		} else if (FingerStruct->Direction == Close) {
 			htim4.Instance->CCR2 = FingerStruct->speed;
 			htim4.Instance->CCR1 =0;
-			HAL_GPIO_WritePin(IN2_Motor4_GPIO_Port, IN2_Motor4_Pin,1);
+			HAL_GPIO_WritePin(IN2_Motor4_GPIO_Port, IN2_Motor4_Pin,0);
 		} else {
 			htim4.Instance->CCR1 =0;
 			htim4.Instance->CCR2 =0;
-			HAL_GPIO_WritePin(IN2_Motor4_GPIO_Port, IN2_Motor4_Pin,1);
-			HAL_GPIO_WritePin(IN1_Motor4_GPIO_Port, IN1_Motor4_Pin,1);
+			HAL_GPIO_WritePin(IN2_Motor4_GPIO_Port, IN2_Motor4_Pin,0);
+			HAL_GPIO_WritePin(IN1_Motor4_GPIO_Port, IN1_Motor4_Pin,0);
 		}
 		FingerStruct->position=((float)FingerStruct->Encoder/Max_Encoder_Index)*100;
 		break;
@@ -162,16 +162,16 @@ void SetMotor(Fingers_Name_Enum name,Finger_Struct* FingerStruct) {
 		if ( FingerStruct->Direction== Open) {
 			htim2.Instance->CCR4 = FingerStruct->speed;
 			htim2.Instance->CCR3 =0;
-			HAL_GPIO_WritePin(IN1_Motor3_GPIO_Port, IN1_Motor3_Pin,1);
+			HAL_GPIO_WritePin(IN1_Motor3_GPIO_Port, IN1_Motor3_Pin,0);
 		} else if (FingerStruct->Direction == Close) {
 			htim2.Instance->CCR3 = FingerStruct->speed;
 			htim2.Instance->CCR4 =0;
-			HAL_GPIO_WritePin(IN2_Motor3_GPIO_Port, IN2_Motor3_Pin,1);
+			HAL_GPIO_WritePin(IN2_Motor3_GPIO_Port, IN2_Motor3_Pin,0);
 		} else {
 			htim2.Instance->CCR3 =0;
 			htim2.Instance->CCR4 =0;
-			HAL_GPIO_WritePin(IN2_Motor3_GPIO_Port, IN2_Motor3_Pin,1);
-			HAL_GPIO_WritePin(IN1_Motor3_GPIO_Port, IN1_Motor3_Pin,1);
+			HAL_GPIO_WritePin(IN2_Motor3_GPIO_Port, IN2_Motor3_Pin,0);
+			HAL_GPIO_WritePin(IN1_Motor3_GPIO_Port, IN1_Motor3_Pin,0);
 		}
 		FingerStruct->position=((float)FingerStruct->Encoder/Max_Encoder_Middle)*100;
 		break;
@@ -179,16 +179,16 @@ void SetMotor(Fingers_Name_Enum name,Finger_Struct* FingerStruct) {
 		if ( FingerStruct->Direction== Open) {
 			htim8.Instance->CCR1 = FingerStruct->speed;
 			htim8.Instance->CCR2 =0;
-			HAL_GPIO_WritePin(IN1_Motor2_GPIO_Port, IN1_Motor2_Pin,1);
+			HAL_GPIO_WritePin(IN1_Motor2_GPIO_Port, IN1_Motor2_Pin,0);
 		} else if (FingerStruct->Direction == Close) {
 			htim8.Instance->CCR2 = FingerStruct->speed;
 			htim8.Instance->CCR1 =0;
-			HAL_GPIO_WritePin(IN2_Motor2_GPIO_Port, IN2_Motor2_Pin,1);
+			HAL_GPIO_WritePin(IN2_Motor2_GPIO_Port, IN2_Motor2_Pin,0);
 		} else {
 			htim8.Instance->CCR1 =0;
 			htim8.Instance->CCR2 =0;
-			HAL_GPIO_WritePin(IN2_Motor2_GPIO_Port, IN2_Motor2_Pin,1);
-			HAL_GPIO_WritePin(IN1_Motor2_GPIO_Port, IN1_Motor2_Pin,1);
+			HAL_GPIO_WritePin(IN2_Motor2_GPIO_Port, IN2_Motor2_Pin,0);
+			HAL_GPIO_WritePin(IN1_Motor2_GPIO_Port, IN1_Motor2_Pin,0);
 		}
 		FingerStruct->position=((float)FingerStruct->Encoder/Max_Encoder_Ring)*100;
 		break;
@@ -196,16 +196,16 @@ void SetMotor(Fingers_Name_Enum name,Finger_Struct* FingerStruct) {
 		if ( FingerStruct->Direction== Open) {
 			htim1.Instance->CCR1 = FingerStruct->speed;
 			htim1.Instance->CCR2 =0;
-			HAL_GPIO_WritePin(IN1_Motor1_GPIO_Port, IN1_Motor1_Pin,1);
+			HAL_GPIO_WritePin(IN1_Motor1_GPIO_Port, IN1_Motor1_Pin,0);
 		} else if (FingerStruct->Direction == Close) {
 			htim1.Instance->CCR2 = FingerStruct->speed;
 			htim1.Instance->CCR1 =0;
-			HAL_GPIO_WritePin(IN2_Motor1_GPIO_Port, IN2_Motor1_Pin,1);
+			HAL_GPIO_WritePin(IN2_Motor1_GPIO_Port, IN2_Motor1_Pin,0);
 		} else {
 			htim1.Instance->CCR1 =0;
 			htim1.Instance->CCR2 =0;
-			HAL_GPIO_WritePin(IN2_Motor1_GPIO_Port, IN2_Motor1_Pin,1);
-			HAL_GPIO_WritePin(IN1_Motor1_GPIO_Port, IN1_Motor1_Pin,1);
+			HAL_GPIO_WritePin(IN2_Motor1_GPIO_Port, IN2_Motor1_Pin,0);
+			HAL_GPIO_WritePin(IN1_Motor1_GPIO_Port, IN1_Motor1_Pin,0);
 		}
 		FingerStruct->position=((float)FingerStruct->Encoder/Max_Encoder_Pinky)*100;
 		break;
@@ -221,12 +221,24 @@ void SetMotor(Fingers_Name_Enum name,Finger_Struct* FingerStruct) {
 void init_motor_controller(void)
 {
 	//start read data from ADC
+	//motor5->thumb
+	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
+	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
+	//motor4->index
+	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1);
+	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_2);
+	//motor3->middle
+	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_3);
+	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_4);
+	//motor2->ring
+	HAL_TIM_PWM_Start(&htim8, TIM_CHANNEL_1);
+	HAL_TIM_PWM_Start(&htim8, TIM_CHANNEL_2);
+	//motor1->pinky
 	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
 	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
-	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);
-	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4);
-	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
+
 	HAL_ADC_MspInit(&hadc1);
+	HAL_ADC_MspInit(&hadc2);
 	HAL_UART_Receive_IT(&huart4, &RXuart, 1);
 	TX_State=idel;
 	// Configure settings
