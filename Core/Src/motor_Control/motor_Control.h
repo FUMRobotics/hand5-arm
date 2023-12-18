@@ -37,6 +37,7 @@ typedef enum
 	Ring,
 	Pinky
 }Fingers_Name_Enum;
+
 //-------------- structure -------------------
 typedef struct
 {

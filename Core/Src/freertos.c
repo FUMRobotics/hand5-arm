@@ -320,11 +320,15 @@ void CommunicationTask(void *argument)
 	/* Infinite loop */
 	for(;;)
 	{
-		sprintf(uartTX,"{CP:%dCR:%dCM:%dCI:%dCT:%d}\n",Fingers_Status.Pinky.Current,Fingers_Status.Ring.Current,Fingers_Status.Middle.Current,Fingers_Status.Index.Current,Fingers_Status.Thumb.Current);
-		HAL_UART_Transmit(&huart4, (uint8_t*)uartTX, strlen(uartTX), 5);
-		osDelay(1);
-		sprintf(uartTX,"{PP:%dPR:%dPM:%dPI:%dPT:%d}\n",((uint16_t)(Fingers_Status.Pinky.position*100)),((uint16_t)(Fingers_Status.Ring.position*100)),((uint16_t)(Fingers_Status.Middle.position*100)),((uint16_t)(Fingers_Status.Index.position*100)),((uint16_t)(Fingers_Status.Thumb.position*100)));
-		HAL_UART_Transmit(&huart4, (uint8_t*)uartTX, strlen(uartTX), 5);
+		if(send_data_UART)
+		{
+			send_data_UART=0;
+			sprintf(uartTX,"{CP:%dCR:%dCM:%dCI:%dCT:%d}\n",Fingers_Status.Pinky.Current,Fingers_Status.Ring.Current,Fingers_Status.Middle.Current,Fingers_Status.Index.Current,Fingers_Status.Thumb.Current);
+			HAL_UART_Transmit(&huart4, (uint8_t*)uartTX, strlen(uartTX), 5);
+			osDelay(1);
+			sprintf(uartTX,"{PP:%dPR:%dPM:%dPI:%dPT:%d}\n",((uint16_t)(Fingers_Status.Pinky.position*100)),((uint16_t)(Fingers_Status.Ring.position*100)),((uint16_t)(Fingers_Status.Middle.position*100)),((uint16_t)(Fingers_Status.Index.position*100)),((uint16_t)(Fingers_Status.Thumb.position*100)));
+			HAL_UART_Transmit(&huart4, (uint8_t*)uartTX, strlen(uartTX), 5);
+		}
 		osDelay(1);
 	}
   /* USER CODE END CommunicationTask */

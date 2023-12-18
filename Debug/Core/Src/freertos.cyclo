@@ -4,4 +4,4 @@
 ../Core/Src/freertos.c:250:6:MiddleFinger	1
 ../Core/Src/freertos.c:272:6:RingFinger	1
 ../Core/Src/freertos.c:294:6:PinkyFinger	1
-../Core/Src/freertos.c:316:6:CommunicationTask	1
+../Core/Src/freertos.c:316:6:CommunicationTask	2

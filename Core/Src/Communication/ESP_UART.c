@@ -21,6 +21,8 @@ char uartRecieveBuffer[150];
 uint8_t RXuart=0;
 UartTransmit_Enum TX_State;
 send_Feedback_enum DataTypeFeedback;
+_Bool send_data_UART=0;
+control_mode_Enum control_mode;
 /* USER CODE END PV */
 
 
@@ -29,6 +31,10 @@ send_Feedback_enum DataTypeFeedback;
  */
 void ProcessUartData(void)
 {
+	if(strstr(uartRecieveBuffer,"{S"))
+		control_mode=speed_mode;
+	else
+		control_mode=position_mode;
 	char* result;
 	result= memchr(uartRecieveBuffer, 'P', strlen(uartRecieveBuffer));
 	Fingers_Status.Pinky.SetPoint = atof(result+2);
@@ -40,20 +46,24 @@ void ProcessUartData(void)
 	Fingers_Status.Index.SetPoint= atof(result+2);
 	result= memchr(uartRecieveBuffer, 'T', strlen(uartRecieveBuffer));
 	Fingers_Status.Thumb.SetPoint= atof(result+2);
+	send_data_UART=1;
 }
 /*
  * Function2--------------------------
  */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
-	if (huart->Instance == USART1) {
+	if (huart->Instance == UART4) {
 		uartRecieveBuffer[uartCounter]=RXuart;
-		if (uartRecieveBuffer[uartCounter] == '\n'&&uartRecieveBuffer[uartCounter-1] == '\r'&& uartRecieveBuffer[uartCounter-2] == '}') {
-			ProcessUartData();
-			ManualControl=1;
-			uartCounter=-1;
+		if(uartCounter>1)
+		{
+			if (uartRecieveBuffer[uartCounter] == '\n'&&uartRecieveBuffer[uartCounter-1] == '\r'&& uartRecieveBuffer[uartCounter-2] == '}') {
+				ProcessUartData();
+				ManualControl=1;
+				uartCounter=-1;
 
-			for(uint16_t cleanCounter=0;cleanCounter<150;cleanCounter++)
-				uartRecieveBuffer[cleanCounter]=0;
+				for(uint16_t cleanCounter=0;cleanCounter<150;cleanCounter++)
+					uartRecieveBuffer[cleanCounter]=0;
+			}
 		}
 		uartCounter++;
 		HAL_UART_Receive_IT(&huart4, &RXuart, 1);

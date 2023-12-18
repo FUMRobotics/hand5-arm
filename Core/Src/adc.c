@@ -301,7 +301,7 @@ void ADC_ReadCurrent_Pinky()
 	HAL_ADC_PollForConversion(&hadc2, 1000);
 	Current_motor[1] = HAL_ADC_GetValue(&hadc2);
 	HAL_ADC_Stop(&hadc2);
-	Fingers_Status.Pinky.Current=(Fingers_Status.Pinky.Current+(0.01*Current_motor[1]))/1.01;
+	Fingers_Status.Pinky.Current=(Fingers_Status.Pinky.Current+(0.05*Current_motor[1]))/1.05;
 	Current_motor[1]=Fingers_Status.Pinky.Current;
 	if(Fingers_Status.Pinky.Current>3800 || Fingers_Status.Pinky.Current<800)
 		Fingers_Status.Pinky.Stuck_Finger=1;
@@ -330,7 +330,7 @@ void ADC_ReadCurrent_Ring()
 	HAL_ADC_PollForConversion(&hadc2, 1000);
 	Current_motor[2] = HAL_ADC_GetValue(&hadc2);
 	HAL_ADC_Stop(&hadc2);
-	Fingers_Status.Ring.Current=(Fingers_Status.Ring.Current+(0.01*Current_motor[2]))/1.01;
+	Fingers_Status.Ring.Current=(Fingers_Status.Ring.Current+(0.05*Current_motor[2]))/1.05;
 	Current_motor[2]=Fingers_Status.Ring.Current;
 	if(Fingers_Status.Ring.Current>3800 || Fingers_Status.Ring.Current<800)
 		Fingers_Status.Ring.Stuck_Finger=1;
@@ -359,7 +359,7 @@ void ADC_ReadCurrent_Middle()
 	HAL_ADC_PollForConversion(&hadc2, 1000);
 	Current_motor[3] = HAL_ADC_GetValue(&hadc2);
 	HAL_ADC_Stop(&hadc2);
-	Fingers_Status.Middle.Current=(Fingers_Status.Middle.Current+(0.01*Current_motor[3]))/1.01;
+	Fingers_Status.Middle.Current=(Fingers_Status.Middle.Current+(0.05*Current_motor[3]))/1.05;
 	Current_motor[3]=Fingers_Status.Middle.Current;
 	if(Fingers_Status.Middle.Current>3800 || Fingers_Status.Middle.Current<800)
 		Fingers_Status.Middle.Stuck_Finger=1;
@@ -388,7 +388,7 @@ void ADC_ReadCurrent_Index()
 	HAL_ADC_PollForConversion(&hadc2, 1000);
 	Current_motor[4] = HAL_ADC_GetValue(&hadc2);
 	HAL_ADC_Stop(&hadc2);
-	Fingers_Status.Index.Current=(Fingers_Status.Index.Current+(0.01*Current_motor[4]))/1.01;
+	Fingers_Status.Index.Current=(Fingers_Status.Index.Current+(0.05*Current_motor[4]))/1.05;
 	Current_motor[4]=Fingers_Status.Index.Current;
 	if(Fingers_Status.Index.Current>3800 || Fingers_Status.Index.Current<800)
 		Fingers_Status.Index.Stuck_Finger=1;
@@ -417,7 +417,7 @@ void ADC_ReadCurrent_Thumb()
 	HAL_ADC_PollForConversion(&hadc2, 1000);
 	Current_motor[5] = HAL_ADC_GetValue(&hadc2);
 	HAL_ADC_Stop(&hadc2);
-	Fingers_Status.Thumb.Current=(Fingers_Status.Thumb.Current+(0.01*Current_motor[5]))/1.01;
+	Fingers_Status.Thumb.Current=(Fingers_Status.Thumb.Current+(0.05*Current_motor[5]))/1.05;
 	Current_motor[5]=Fingers_Status.Thumb.Current;
 	if(Fingers_Status.Thumb.Current>3800 || Fingers_Status.Thumb.Current<800)
 		Fingers_Status.Thumb.Stuck_Finger=1;
