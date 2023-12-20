@@ -18,9 +18,9 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "cmsis_os.h"
 #include "adc.h"
 #include "can.h"
+#include "dma.h"
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
@@ -28,6 +28,9 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "motor_Control.h"
+#include "ESP_UART.h"
+#include <stdio.h>
+#include <string.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -47,13 +50,13 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+char uartTX[50];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 void PeriphCommonClock_Config(void);
-void MX_FREERTOS_Init(void);
+static void MX_NVIC_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -94,6 +97,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_ADC1_Init();
   MX_ADC2_Init();
   MX_CAN1_Init();
@@ -103,33 +107,70 @@ int main(void)
   MX_TIM4_Init();
   MX_TIM8_Init();
   MX_UART4_Init();
+
+  /* Initialize interrupts */
+  MX_NVIC_Init();
   /* USER CODE BEGIN 2 */
-  HAL_UART_MspInit(&huart4);
+  HAL_ADC_MspInit(&hadc1);
   init_motor_controller();
-//  Fingers_Status.Thumb.Direction=Open;
-//  Fingers_Status.Thumb.speed=0;
-//  Fingers_Status.Index.Direction=Open;
-//  Fingers_Status.Index.speed=50;
-//  Fingers_Status.Middle.Direction=Open;
-//  Fingers_Status.Middle.speed=50;
-//  Fingers_Status.Ring.Direction=Open;
-//  Fingers_Status.Ring.speed=50;
-//  Fingers_Status.Pinky.Direction=Open;
-//  Fingers_Status.Pinky.speed=50;
+  HAL_ADC_Start_DMA(&hadc2,(uint32_t *) ADCData, 6);
+
+  Fingers_Calibration();
+  //feedback for end of calibration
+  HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin,1);
   /* USER CODE END 2 */
 
-  /* Init scheduler */
-  osKernelInitialize();  /* Call init function for freertos objects (in freertos.c) */
-  MX_FREERTOS_Init();
-
-  /* Start scheduler */
-  osKernelStart();
-
-  /* We should never get here as control is now taken by the scheduler */
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+
+	  //------------------------------| Thumb finger |----------------------------------------
+		////if(Fingers_Status.Thumb.Stuck_Finger)
+//			Fingers_Status.Thumb.Direction=Stop;
+		SetMotor(Thumb, &Fingers_Status.Thumb);
+		ADC_ReadCurrent_Thumb();
+		if(Fingers_Status.Thumb.Direction==Stop)
+			Read_Encoder(&Fingers_Status.Thumb,Thumb);
+	  //------------------------------| Index finger |----------------------------------------
+		////if(Fingers_Status.Index.Stuck_Finger)
+//			Fingers_Status.Index.Direction=Stop;
+		SetMotor(Index, &Fingers_Status.Index);
+		ADC_ReadCurrent_Index();
+		if(Fingers_Status.Thumb.Direction==Stop)
+			Read_Encoder(&Fingers_Status.Index,Index);
+	  //------------------------------| Middle finger |----------------------------------------
+		////if(Fingers_Status.Middle.Stuck_Finger)
+//			Fingers_Status.Middle.Direction=Stop;
+		SetMotor(Middle, &Fingers_Status.Middle);
+		ADC_ReadCurrent_Middle();
+		if(Fingers_Status.Thumb.Direction==Stop)
+			Read_Encoder(&Fingers_Status.Middle,Middle);
+	  //------------------------------| Ring finger |----------------------------------------
+		////if(Fingers_Status.Ring.Stuck_Finger)
+//			Fingers_Status.Ring.Direction=Stop;
+		SetMotor(Ring, &Fingers_Status.Ring);
+		ADC_ReadCurrent_Ring();
+		if(Fingers_Status.Thumb.Direction==Stop)
+			Read_Encoder(&Fingers_Status.Ring,Ring);
+	  //------------------------------| Pinky finger |----------------------------------------
+		////if(Fingers_Status.Pinky.Stuck_Finger)
+//			Fingers_Status.Pinky.Direction=Stop;
+		SetMotor(Pinky, &Fingers_Status.Pinky);
+		ADC_ReadCurrent_Pinky();
+		if(Fingers_Status.Thumb.Direction==Stop)
+			Read_Encoder(&Fingers_Status.Pinky,Pinky);
+	  //------------------------------| Communication |----------------------------------------
+		if(send_data_UART)
+		{
+			send_data_UART=0;
+			sprintf(uartTX,"{CP:%dCR:%dCM:%dCI:%dCT:%d}\n",Fingers_Status.Pinky.Current,Fingers_Status.Ring.Current,Fingers_Status.Middle.Current,Fingers_Status.Index.Current,Fingers_Status.Thumb.Current);
+			HAL_UART_Transmit(&huart4, (uint8_t*)uartTX, strlen(uartTX), 5);
+			HAL_Delay(1);
+			sprintf(uartTX,"{PP:%dPR:%dPM:%dPI:%dPT:%d}\n",((uint16_t)(Fingers_Status.Pinky.position*100)),((uint16_t)(Fingers_Status.Ring.position*100)),((uint16_t)(Fingers_Status.Middle.position*100)),((uint16_t)(Fingers_Status.Index.position*100)),((uint16_t)(Fingers_Status.Thumb.position*100)));
+			HAL_UART_Transmit(&huart4, (uint8_t*)uartTX, strlen(uartTX), 5);
+		}
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -202,7 +243,7 @@ void PeriphCommonClock_Config(void)
   PeriphClkInit.PLLSAI1.PLLSAI1N = 8;
   PeriphClkInit.PLLSAI1.PLLSAI1P = RCC_PLLP_DIV7;
   PeriphClkInit.PLLSAI1.PLLSAI1Q = RCC_PLLQ_DIV2;
-  PeriphClkInit.PLLSAI1.PLLSAI1R = RCC_PLLR_DIV2;
+  PeriphClkInit.PLLSAI1.PLLSAI1R = RCC_PLLR_DIV8;
   PeriphClkInit.PLLSAI1.PLLSAI1ClockOut = RCC_PLLSAI1_ADC1CLK;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
@@ -210,30 +251,20 @@ void PeriphCommonClock_Config(void)
   }
 }
 
+/**
+  * @brief NVIC Configuration.
+  * @retval None
+  */
+static void MX_NVIC_Init(void)
+{
+  /* UART4_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(UART4_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(UART4_IRQn);
+}
+
 /* USER CODE BEGIN 4 */
 
 /* USER CODE END 4 */
-
-/**
-  * @brief  Period elapsed callback in non blocking mode
-  * @note   This function is called  when TIM7 interrupt took place, inside
-  * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
-  * a global variable "uwTick" used as application time base.
-  * @param  htim : TIM handle
-  * @retval None
-  */
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
-{
-  /* USER CODE BEGIN Callback 0 */
-
-  /* USER CODE END Callback 0 */
-  if (htim->Instance == TIM7) {
-    HAL_IncTick();
-  }
-  /* USER CODE BEGIN Callback 1 */
-
-  /* USER CODE END Callback 1 */
-}
 
 /**
   * @brief  This function is executed in case of error occurrence.

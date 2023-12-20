@@ -1,7 +1,0 @@
-../Core/Src/freertos.c:149:6:MX_FREERTOS_Init	8	static
-../Core/Src/freertos.c:206:6:ThumbFinger	16	static
-../Core/Src/freertos.c:228:6:IndexFinger	16	static
-../Core/Src/freertos.c:250:6:MiddleFinger	16	static
-../Core/Src/freertos.c:272:6:RingFinger	16	static
-../Core/Src/freertos.c:294:6:PinkyFinger	16	static
-../Core/Src/freertos.c:316:6:CommunicationTask	96	static

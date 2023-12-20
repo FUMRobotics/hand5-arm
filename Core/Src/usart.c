@@ -92,9 +92,6 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     GPIO_InitStruct.Alternate = GPIO_AF8_UART4;
     HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-    /* UART4 interrupt Init */
-    HAL_NVIC_SetPriority(UART4_IRQn, 5, 0);
-    HAL_NVIC_EnableIRQ(UART4_IRQn);
   /* USER CODE BEGIN UART4_MspInit 1 */
 
   /* USER CODE END UART4_MspInit 1 */

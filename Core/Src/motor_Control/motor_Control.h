@@ -10,11 +10,23 @@
 #include "main.h"
 
 //---------------- Defines ---------------------
+//---------------- Encoder ---------------------
 #define Max_Encoder_Index               27300
 #define Max_Encoder_Middle              28700
 #define Max_Encoder_Ring                27600
 #define Max_Encoder_Pinky               26100
 #define Max_Encoder_Thumb               1	 //must be measured after mechanical part fixed
+//------------- Stall Current -----------------(in 60% Speed)
+#define Max_Current_Close_Index			1950
+#define Max_Current_Close_Middle		1980
+#define Max_Current_Close_Ring			1950
+#define Max_Current_Close_Pinky			2000
+#define Max_Current_Close_Thumb			1	//must be measured after mechanical part fixed
+#define Min_Current_Open_Index			1500
+#define Min_Current_Open_Middle			1600
+#define Min_Current_Open_Ring			1550
+#define Min_Current_Open_Pinky			1600
+#define Min_Current_Open_Thumb			1	//must be measured after mechanical part fixed
 //-------------- enumeration -------------------
 typedef enum
 {
@@ -65,8 +77,11 @@ typedef struct
 extern Fingers_Struct Fingers_Status;
 extern uint8_t ManualControl;
 extern uint32_t Current_motor[6];
+extern volatile uint16_t ADCData[6];
+extern volatile uint16_t calibration_counter;
 //-------------- function prototype -------------------
 void Read_Encoder (Finger_Struct* FingerStruct,Fingers_Name_Enum FingerName);
 void SetMotor(Fingers_Name_Enum name,Finger_Struct*  FingerStruct);
 void init_motor_controller(void);
+void Fingers_Calibration(void);
 #endif /* SRC_MOTOR_CONTROL_MOTOR_CONTROL_H_ */
