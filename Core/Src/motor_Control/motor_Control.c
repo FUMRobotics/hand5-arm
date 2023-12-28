@@ -81,6 +81,24 @@ void Read_Encoder (Fingers_Name_Enum FingerName,Finger_Struct* FingerStruct)
  */
 void SetMotor(Fingers_Name_Enum FingerName,Finger_Struct* FingerStruct) {
 	//	Read_Encoder(FingerStruct, name);
+	if(control_mode==speed_mode)
+	{
+		if(FingerStruct->SetPoint>0)
+		{
+			FingerStruct->speed=FingerStruct->SetPoint;
+			FingerStruct->Direction_motor=Open;
+			FingerStruct->Direction_Encoder=Open;
+		}else if(FingerStruct->SetPoint<0)
+		{
+			FingerStruct->speed=FingerStruct->SetPoint*(-1);
+			FingerStruct->Direction_motor=Close;
+			FingerStruct->Direction_Encoder=Close;
+		}else
+		{
+			FingerStruct->Direction_motor=Stop;
+			FingerStruct->Direction_Encoder=Stop;
+		}
+	}
 	switch (FingerName) {
 	case Thumb :
 		if ( FingerStruct->Direction_motor== Open) {
@@ -184,31 +202,32 @@ void init_motor_controller(void)
 	HAL_UART_Receive_IT(&huart4, &RXuart, 1);
 	HAL_TIM_Base_Start_IT(&htim7);
 	TX_State=idel;
+	control_mode=position_mode;
 	//-------------|Configure PID settings|----------------
 	//********THUMB
 	PID(&Fingers_Status.Thumb.PID_Struct, &Fingers_Status.Thumb.position, &Fingers_Status.Thumb.speed, &Fingers_Status.Thumb.SetPoint, 1, 3, 0, _PID_P_ON_E, _PID_CD_DIRECT);
 	PID_SetMode(&Fingers_Status.Thumb.PID_Struct, _PID_MODE_AUTOMATIC);
-	PID_SetSampleTime(&Fingers_Status.Thumb.PID_Struct, 100);
+	PID_SetSampleTime(&Fingers_Status.Thumb.PID_Struct, 1);
 	PID_SetOutputLimits(&Fingers_Status.Thumb.PID_Struct, 0, 100);
 	//********INDEX
 	PID(&Fingers_Status.Index.PID_Struct, &Fingers_Status.Index.position, &Fingers_Status.Index.speed, &Fingers_Status.Index.SetPoint, 1, 3, 0, _PID_P_ON_E, _PID_CD_DIRECT);
 	PID_SetMode(&Fingers_Status.Index.PID_Struct, _PID_MODE_AUTOMATIC);
-	PID_SetSampleTime(&Fingers_Status.Index.PID_Struct, 100);
+	PID_SetSampleTime(&Fingers_Status.Index.PID_Struct, 1);
 	PID_SetOutputLimits(&Fingers_Status.Index.PID_Struct, 0, 100);
 	//********MIDDLE
 	PID(&Fingers_Status.Middle.PID_Struct, &Fingers_Status.Middle.position, &Fingers_Status.Middle.speed, &Fingers_Status.Middle.SetPoint, 1, 3, 0, _PID_P_ON_E, _PID_CD_DIRECT);
 	PID_SetMode(&Fingers_Status.Middle.PID_Struct, _PID_MODE_AUTOMATIC);
-	PID_SetSampleTime(&Fingers_Status.Middle.PID_Struct, 100);
+	PID_SetSampleTime(&Fingers_Status.Middle.PID_Struct, 1);
 	PID_SetOutputLimits(&Fingers_Status.Middle.PID_Struct, 0, 100);
 	//********RING
 	PID(&Fingers_Status.Ring.PID_Struct, &Fingers_Status.Ring.position, &Fingers_Status.Ring.speed, &Fingers_Status.Ring.SetPoint, 1, 3, 0, _PID_P_ON_E, _PID_CD_DIRECT);
 	PID_SetMode(&Fingers_Status.Ring.PID_Struct, _PID_MODE_AUTOMATIC);
-	PID_SetSampleTime(&Fingers_Status.Ring.PID_Struct, 100);
+	PID_SetSampleTime(&Fingers_Status.Ring.PID_Struct, 1);
 	PID_SetOutputLimits(&Fingers_Status.Ring.PID_Struct, 0, 100);
 	//********PINKY
 	PID(&Fingers_Status.Pinky.PID_Struct, &Fingers_Status.Pinky.position, &Fingers_Status.Pinky.speed, &Fingers_Status.Pinky.SetPoint, 1, 3, 0, _PID_P_ON_E, _PID_CD_DIRECT);
 	PID_SetMode(&Fingers_Status.Pinky.PID_Struct, _PID_MODE_AUTOMATIC);
-	PID_SetSampleTime(&Fingers_Status.Pinky.PID_Struct, 100);
+	PID_SetSampleTime(&Fingers_Status.Pinky.PID_Struct, 1);
 	PID_SetOutputLimits(&Fingers_Status.Pinky.PID_Struct, 0, 100);
 }
 
@@ -226,20 +245,20 @@ void Fingers_Calibration(void)
 	//have mechanical problem
 
 	//------------------------------| Thumb finger |----------------------------------------
-//	Fingers_Status.Thumb.Direction_motor=Open;
-//	calibration_counter=0;
-//	while(Fingers_Status.Thumb.Stuck_Finger==0 || calibration_counter<60)
-//	{
-//		Fingers_Status.Thumb.speed=60;
-//		SetMotor(Thumb, &Fingers_Status.Thumb);
-//		ADC_ReadCurrent_Thumb();
-//	}
-//	Fingers_Status.Thumb.Direction_motor=Stop;
-//	Fingers_Status.Thumb.speed=0;
-//	SetMotor(Thumb, &Fingers_Status.Thumb);
-//	Fingers_Status.Thumb.Stuck_Finger=0;
-//	Fingers_Status.Thumb.Encoder=Max_Encoder_Thumb;
-//	Fingers_Status.Thumb.SetPoint=100;
+	//	Fingers_Status.Thumb.Direction_motor=Open;
+	//	calibration_counter=0;
+	//	while(Fingers_Status.Thumb.Stuck_Finger==0 || calibration_counter<60)
+	//	{
+	//		Fingers_Status.Thumb.speed=60;
+	//		SetMotor(Thumb, &Fingers_Status.Thumb);
+	//		ADC_ReadCurrent_Thumb();
+	//	}
+	//	Fingers_Status.Thumb.Direction_motor=Stop;
+	//	Fingers_Status.Thumb.speed=0;
+	//	SetMotor(Thumb, &Fingers_Status.Thumb);
+	//	Fingers_Status.Thumb.Stuck_Finger=0;
+	//	Fingers_Status.Thumb.Encoder=Max_Encoder_Thumb;
+	//	Fingers_Status.Thumb.SetPoint=100;
 	//------------------------------| Index finger |----------------------------------------
 	Fingers_Status.Index.Direction_motor=Open;
 	calibration_counter=0;
@@ -303,55 +322,58 @@ void Fingers_Calibration(void)
 }
 void Control_Motor(Fingers_Name_Enum FingerName,Finger_Struct* FingerStruct)
 {
-	if(FingerStruct->SetPoint-FingerStruct->position>0.1)
+	if(control_mode==position_mode)
 	{
-		FingerStruct->Direction_motor=Open;
-		FingerStruct->Direction_Encoder=Open;
-		FingerStruct->ChangeDirection=0;
-		PID_SetControllerDirection(&FingerStruct->PID_Struct, _PID_CD_DIRECT);
-	}
-	else if (FingerStruct->SetPoint-FingerStruct->position<-0.1)
-	{
-		FingerStruct->Direction_motor=Close;
-		FingerStruct->Direction_Encoder=Close;
-		FingerStruct->ChangeDirection=0;
-		PID_SetControllerDirection(&FingerStruct->PID_Struct, _PID_CD_REVERSE);
-	}
-	else
-	{
-		FingerStruct->Direction_motor=Stop;
-	}
-	if(FingerStruct->Stuck_Finger)
-	{
-		if( FingerStruct->Current_Counter>600)
+		if(FingerStruct->SetPoint-FingerStruct->position>0.01)
 		{
-			if(FingerStruct->Direction_motor==Open)
-			{
-				switch (FingerName) {
-				case Thumb:
-					FingerStruct->Encoder=Max_Encoder_Thumb;
-					break;
-				case Index:
-					FingerStruct->Encoder=Max_Encoder_Index;
-					break;
-				case Middle:
-					FingerStruct->Encoder=Max_Encoder_Middle;
-					break;
-				case Ring:
-					FingerStruct->Encoder=Max_Encoder_Ring;
-					break;
-				case Pinky:
-					FingerStruct->Encoder=Max_Encoder_Pinky;
-					break;
-				default:
-					break;
-				}
-			}
-			else if(FingerStruct->Direction_motor==Close && FingerStruct->position<5 )
-				FingerStruct->Encoder=0;
-			FingerStruct->Direction_motor=Stop;
-			FingerStruct->speed=0;
+			FingerStruct->Direction_motor=Open;
+			FingerStruct->Direction_Encoder=Open;
+			FingerStruct->ChangeDirection=0;
+			PID_SetControllerDirection(&FingerStruct->PID_Struct, _PID_CD_DIRECT);
 		}
-	}else
-		FingerStruct->Current_Counter=0;
+		else if (FingerStruct->SetPoint-FingerStruct->position<-0.01)
+		{
+			FingerStruct->Direction_motor=Close;
+			FingerStruct->Direction_Encoder=Close;
+			FingerStruct->ChangeDirection=0;
+			PID_SetControllerDirection(&FingerStruct->PID_Struct, _PID_CD_REVERSE);
+		}
+		else
+		{
+			FingerStruct->Direction_motor=Stop;
+		}
+		if(FingerStruct->Stuck_Finger)
+		{
+			if( FingerStruct->Current_Counter>600)
+			{
+				if(FingerStruct->Direction_motor==Open)
+				{
+					switch (FingerName) {
+					case Thumb:
+						FingerStruct->Encoder=Max_Encoder_Thumb;
+						break;
+					case Index:
+						FingerStruct->Encoder=Max_Encoder_Index;
+						break;
+					case Middle:
+						FingerStruct->Encoder=Max_Encoder_Middle;
+						break;
+					case Ring:
+						FingerStruct->Encoder=Max_Encoder_Ring;
+						break;
+					case Pinky:
+						FingerStruct->Encoder=Max_Encoder_Pinky;
+						break;
+					default:
+						break;
+					}
+				}
+				else if(FingerStruct->Direction_motor==Close && FingerStruct->position<5 )
+					FingerStruct->Encoder=0;
+				FingerStruct->Direction_motor=Stop;
+				FingerStruct->speed=0;
+			}
+		}else
+			FingerStruct->Current_Counter=0;
+	}
 }

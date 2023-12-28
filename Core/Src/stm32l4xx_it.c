@@ -23,6 +23,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "motor_Control.h"
+#include "ESP_UART.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -196,6 +197,15 @@ void SysTick_Handler(void)
   Fingers_Status.Pinky.Current_Counter++;
   Fingers_Status.Ring.Current_Counter++;
   Fingers_Status.Thumb.Current_Counter++;
+
+  if(control_mode==position_mode)
+  {
+	  //PID_Compute(&Fingers_Status.Thumb.PID_Struct);
+	  PID_Compute(&Fingers_Status.Index.PID_Struct);
+	  PID_Compute(&Fingers_Status.Middle.PID_Struct);
+	  PID_Compute(&Fingers_Status.Ring.PID_Struct);
+	  PID_Compute(&Fingers_Status.Pinky.PID_Struct);
+  }
   /* USER CODE END SysTick_IRQn 1 */
 }
 

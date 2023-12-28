@@ -399,7 +399,6 @@ void ADC_Select_Pinky_CH (void)
 void ADC_ReadCurrent_Pinky()
 {
 	Fingers_Status.Pinky.Current=(Fingers_Status.Pinky.Current+(0.01*ADCData[Pinky]))/1.01;
-	Current_motor[1]=Fingers_Status.Pinky.Current;
 	if(Fingers_Status.Pinky.Current>Max_Current_Close_Pinky || Fingers_Status.Pinky.Current<Min_Current_Open_Pinky)
 		Fingers_Status.Pinky.Stuck_Finger=1;
 	else

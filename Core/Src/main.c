@@ -156,7 +156,33 @@ int main(void)
 		if(send_data_UART)
 		{
 			send_data_UART=0;
-			sprintf(uartTX,"{CP:%dCR:%dCM:%dCI:%dCT:%d}\n",Fingers_Status.Pinky.Current,Fingers_Status.Ring.Current,Fingers_Status.Middle.Current,Fingers_Status.Index.Current,Fingers_Status.Thumb.Current);
+			uint16_t current_map[5];
+			//map current pinky
+			if(Fingers_Status.Pinky.Current<1772)
+				current_map[Pinky]=(Fingers_Status.Pinky.Current/(1772-1288))*1000;
+			else
+				current_map[Pinky]=(Fingers_Status.Pinky.Current/(2298-1772))*1000;
+			//map current ring
+			if(Fingers_Status.Ring.Current<1781)
+				current_map[Ring]=(Fingers_Status.Ring.Current/(1781-1264))*1000;
+			else
+				current_map[Ring]=(Fingers_Status.Ring.Current/(2243-1781))*1000;
+			//map current middle
+			if(Fingers_Status.Middle.Current<1750)
+				current_map[Middle]=(Fingers_Status.Middle.Current/(1750-1290))*1000;
+			else
+				current_map[Middle]=(Fingers_Status.Middle.Current/(2291-1750))*1000;
+			//map current index
+			if(Fingers_Status.Index.Current<1688)
+				current_map[Index]=(Fingers_Status.Index.Current/(1688-1226))*1000;
+			else
+				current_map[Index]=(Fingers_Status.Index.Current/(2239-1688))*1000;
+			//map current thumb
+			if(Fingers_Status.Thumb.Current<1701)
+				current_map[Thumb]=(Fingers_Status.Thumb.Current/(1701-1233))*1000;
+			else
+				current_map[Thumb]=(Fingers_Status.Thumb.Current/(2279-1701))*1000;
+			sprintf(uartTX,"{CP:%dCR:%dCM:%dCI:%dCT:%d}\n",current_map[Pinky],current_map[Ring],current_map[Middle],current_map[Index],current_map[Thumb]);
 			HAL_UART_Transmit(&huart4, (uint8_t*)uartTX, strlen(uartTX), 5);
 			HAL_Delay(1);
 			sprintf(uartTX,"{PP:%dPR:%dPM:%dPI:%dPT:%d}\n",((uint16_t)(Fingers_Status.Pinky.position*100)),((uint16_t)(Fingers_Status.Ring.position*100)),((uint16_t)(Fingers_Status.Middle.position*100)),((uint16_t)(Fingers_Status.Index.position*100)),((uint16_t)(Fingers_Status.Thumb.position*100)));
@@ -248,11 +274,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
 {
 	if(htim->Instance==TIM7)
 	{
-//		PID_Compute(&Fingers_Status.Thumb.PID_Struct);
-		PID_Compute(&Fingers_Status.Index.PID_Struct);
-		PID_Compute(&Fingers_Status.Middle.PID_Struct);
-		PID_Compute(&Fingers_Status.Ring.PID_Struct);
-		PID_Compute(&Fingers_Status.Pinky.PID_Struct);
 	}
 }
 /* USER CODE END 4 */
