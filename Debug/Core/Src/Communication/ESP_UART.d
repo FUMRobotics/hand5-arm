@@ -32,8 +32,8 @@ Core/Src/Communication/ESP_UART.o: ../Core/Src/Communication/ESP_UART.c \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim_ex.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h \
- ../Core/Src/motor_Control/motor_Control.h ../Core/Inc/usart.h \
- ../Core/Inc/main.h
+ ../Core/Src/motor_Control/motor_Control.h \
+ ../Core/Src/motor_Control/PID.h ../Core/Inc/usart.h ../Core/Inc/main.h
 ../Core/Src/Communication/ESP_UART.h:
 ../Core/Inc/main.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h:
@@ -69,5 +69,6 @@ Core/Src/Communication/ESP_UART.o: ../Core/Src/Communication/ESP_UART.c \
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h:
 ../Core/Src/motor_Control/motor_Control.h:
+../Core/Src/motor_Control/PID.h:
 ../Core/Inc/usart.h:
 ../Core/Inc/main.h:

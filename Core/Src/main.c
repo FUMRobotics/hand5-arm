@@ -1,20 +1,20 @@
 /* USER CODE BEGIN Header */
 /**
-  ******************************************************************************
-  * @file           : main.c
-  * @brief          : Main program body
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2023 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
+ ******************************************************************************
+ * @file           : main.c
+ * @brief          : Main program body
+ ******************************************************************************
+ * @attention
+ *
+ * Copyright (c) 2023 STMicroelectronics.
+ * All rights reserved.
+ *
+ * This software is licensed under terms that can be found in the LICENSE file
+ * in the root directory of this software component.
+ * If no LICENSE file comes with this software, it is provided AS-IS.
+ *
+ ******************************************************************************
+ */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
@@ -31,6 +31,7 @@
 #include "ESP_UART.h"
 #include <stdio.h>
 #include <string.h>
+#include "pid.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -56,7 +57,6 @@ char uartTX[50];
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 void PeriphCommonClock_Config(void);
-static void MX_NVIC_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -107,60 +107,52 @@ int main(void)
   MX_TIM4_Init();
   MX_TIM8_Init();
   MX_UART4_Init();
-
-  /* Initialize interrupts */
-  MX_NVIC_Init();
+  MX_TIM7_Init();
   /* USER CODE BEGIN 2 */
-  HAL_ADC_MspInit(&hadc1);
-  init_motor_controller();
-  HAL_ADC_Start_DMA(&hadc2,(uint32_t *) ADCData, 6);
+	init_motor_controller();
+	//start fingers calibration
+	Fingers_Calibration();
+	//feedback for end of calibration
+	HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin,1);
 
-  Fingers_Calibration();
-  //feedback for end of calibration
-  HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin,1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  while (1)
-  {
+	while (1)
+	{
 
-	  //------------------------------| Thumb finger |----------------------------------------
-		////if(Fingers_Status.Thumb.Stuck_Finger)
-//			Fingers_Status.Thumb.Direction=Stop;
+		//------------------------------| Thumb finger |----------------------------------------
 		SetMotor(Thumb, &Fingers_Status.Thumb);
+//		Control_Motor(Thumb, &Fingers_Status.Thumb);
 		ADC_ReadCurrent_Thumb();
-		if(Fingers_Status.Thumb.Direction==Stop)
-			Read_Encoder(&Fingers_Status.Thumb,Thumb);
-	  //------------------------------| Index finger |----------------------------------------
-		////if(Fingers_Status.Index.Stuck_Finger)
-//			Fingers_Status.Index.Direction=Stop;
-		SetMotor(Index, &Fingers_Status.Index);
+		if(Fingers_Status.Thumb.Direction_motor==Stop)
+			Read_Encoder(Thumb, &Fingers_Status.Thumb);
+		//------------------------------| Index finger |----------------------------------------
 		ADC_ReadCurrent_Index();
-		if(Fingers_Status.Thumb.Direction==Stop)
-			Read_Encoder(&Fingers_Status.Index,Index);
-	  //------------------------------| Middle finger |----------------------------------------
-		////if(Fingers_Status.Middle.Stuck_Finger)
-//			Fingers_Status.Middle.Direction=Stop;
-		SetMotor(Middle, &Fingers_Status.Middle);
+		Control_Motor(Index,&Fingers_Status.Index);
+		SetMotor(Index, &Fingers_Status.Index);
+		if(Fingers_Status.Index.Direction_motor==Stop)
+			Read_Encoder(Index, &Fingers_Status.Index);
+		//------------------------------| Middle finger |----------------------------------------
 		ADC_ReadCurrent_Middle();
-		if(Fingers_Status.Thumb.Direction==Stop)
-			Read_Encoder(&Fingers_Status.Middle,Middle);
-	  //------------------------------| Ring finger |----------------------------------------
-		////if(Fingers_Status.Ring.Stuck_Finger)
-//			Fingers_Status.Ring.Direction=Stop;
+		Control_Motor(Middle,&Fingers_Status.Middle);
+		SetMotor(Middle, &Fingers_Status.Middle);
+		if(Fingers_Status.Middle.Direction_motor==Stop)
+			Read_Encoder(Middle, &Fingers_Status.Middle);
+		//------------------------------| Ring finger |----------------------------------------
 		SetMotor(Ring, &Fingers_Status.Ring);
+		Control_Motor(Ring,&Fingers_Status.Ring);
 		ADC_ReadCurrent_Ring();
-		if(Fingers_Status.Thumb.Direction==Stop)
-			Read_Encoder(&Fingers_Status.Ring,Ring);
-	  //------------------------------| Pinky finger |----------------------------------------
-		////if(Fingers_Status.Pinky.Stuck_Finger)
-//			Fingers_Status.Pinky.Direction=Stop;
+		if(Fingers_Status.Ring.Direction_motor==Stop)
+			Read_Encoder(Ring, &Fingers_Status.Ring);
+		//------------------------------| Pinky finger |----------------------------------------
 		SetMotor(Pinky, &Fingers_Status.Pinky);
+		Control_Motor(Pinky,&Fingers_Status.Pinky);
 		ADC_ReadCurrent_Pinky();
-		if(Fingers_Status.Thumb.Direction==Stop)
-			Read_Encoder(&Fingers_Status.Pinky,Pinky);
-	  //------------------------------| Communication |----------------------------------------
+		if(Fingers_Status.Pinky.Direction_motor==Stop)
+			Read_Encoder(Pinky, &Fingers_Status.Pinky);
+		//------------------------------| Communication |----------------------------------------
 		if(send_data_UART)
 		{
 			send_data_UART=0;
@@ -174,7 +166,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-  }
+	}
   /* USER CODE END 3 */
 }
 
@@ -251,19 +243,18 @@ void PeriphCommonClock_Config(void)
   }
 }
 
-/**
-  * @brief NVIC Configuration.
-  * @retval None
-  */
-static void MX_NVIC_Init(void)
-{
-  /* UART4_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(UART4_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(UART4_IRQn);
-}
-
 /* USER CODE BEGIN 4 */
-
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
+{
+	if(htim->Instance==TIM7)
+	{
+//		PID_Compute(&Fingers_Status.Thumb.PID_Struct);
+		PID_Compute(&Fingers_Status.Index.PID_Struct);
+		PID_Compute(&Fingers_Status.Middle.PID_Struct);
+		PID_Compute(&Fingers_Status.Ring.PID_Struct);
+		PID_Compute(&Fingers_Status.Pinky.PID_Struct);
+	}
+}
 /* USER CODE END 4 */
 
 /**
@@ -273,11 +264,11 @@ static void MX_NVIC_Init(void)
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
-  /* User can add his own implementation to report the HAL error return state */
-  __disable_irq();
-  while (1)
-  {
-  }
+	/* User can add his own implementation to report the HAL error return state */
+	__disable_irq();
+	while (1)
+	{
+	}
   /* USER CODE END Error_Handler_Debug */
 }
 
@@ -292,7 +283,7 @@ void Error_Handler(void)
 void assert_failed(uint8_t *file, uint32_t line)
 {
   /* USER CODE BEGIN 6 */
-  /* User can add his own implementation to report the file name and line number,
+	/* User can add his own implementation to report the file name and line number,
      ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
   /* USER CODE END 6 */
 }

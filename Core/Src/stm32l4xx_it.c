@@ -57,6 +57,7 @@
 
 /* External variables --------------------------------------------------------*/
 extern DMA_HandleTypeDef hdma_adc2;
+extern TIM_HandleTypeDef htim7;
 extern UART_HandleTypeDef huart4;
 /* USER CODE BEGIN EV */
 
@@ -86,7 +87,7 @@ void NMI_Handler(void)
 void HardFault_Handler(void)
 {
   /* USER CODE BEGIN HardFault_IRQn 0 */
-
+	HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin,0);
   /* USER CODE END HardFault_IRQn 0 */
   while (1)
   {
@@ -190,6 +191,11 @@ void SysTick_Handler(void)
   HAL_IncTick();
   /* USER CODE BEGIN SysTick_IRQn 1 */
   calibration_counter++;
+  Fingers_Status.Index.Current_Counter++;
+  Fingers_Status.Middle.Current_Counter++;
+  Fingers_Status.Pinky.Current_Counter++;
+  Fingers_Status.Ring.Current_Counter++;
+  Fingers_Status.Thumb.Current_Counter++;
   /* USER CODE END SysTick_IRQn 1 */
 }
 
@@ -314,6 +320,20 @@ void UART4_IRQHandler(void)
   /* USER CODE BEGIN UART4_IRQn 1 */
 
   /* USER CODE END UART4_IRQn 1 */
+}
+
+/**
+  * @brief This function handles TIM7 global interrupt.
+  */
+void TIM7_IRQHandler(void)
+{
+  /* USER CODE BEGIN TIM7_IRQn 0 */
+
+  /* USER CODE END TIM7_IRQn 0 */
+  HAL_TIM_IRQHandler(&htim7);
+  /* USER CODE BEGIN TIM7_IRQn 1 */
+
+  /* USER CODE END TIM7_IRQn 1 */
 }
 
 /* USER CODE BEGIN 1 */

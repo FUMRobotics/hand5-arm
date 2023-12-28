@@ -125,10 +125,6 @@ void Error_Handler(void);
 #define Motor5_Encoder2_Pin GPIO_PIN_10
 #define Motor5_Encoder2_GPIO_Port GPIOA
 #define Motor5_Encoder2_EXTI_IRQn EXTI15_10_IRQn
-#define MCU_TX_ESP_RX_Pin GPIO_PIN_10
-#define MCU_TX_ESP_RX_GPIO_Port GPIOC
-#define MCU_RX_ESP_TX_Pin GPIO_PIN_11
-#define MCU_RX_ESP_TX_GPIO_Port GPIOC
 #define IN2_Motor5_Pin GPIO_PIN_4
 #define IN2_Motor5_GPIO_Port GPIOB
 #define IN1_Motor5_Pin GPIO_PIN_5

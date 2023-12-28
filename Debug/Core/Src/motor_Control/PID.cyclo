@@ -1,2 +1,15 @@
-../Core/Src/motor_Control/PID.c:28:6:qPID_Init	1
-../Core/Src/motor_Control/PID.c:37:7:qPID_Process_	16
+../Core/Src/motor_Control/PID.c:25:6:PID_Init	3
+../Core/Src/motor_Control/PID.c:43:6:PID	1
+../Core/Src/motor_Control/PID.c:62:6:PID2	1
+../Core/Src/motor_Control/PID.c:68:9:PID_Compute	11
+../Core/Src/motor_Control/PID.c:159:17:PID_SetMode	3
+../Core/Src/motor_Control/PID.c:173:17:PID_GetMode	1
+../Core/Src/motor_Control/PID.c:179:6:PID_SetOutputLimits	7
+../Core/Src/motor_Control/PID.c:221:6:PID_SetTunings	1
+../Core/Src/motor_Control/PID.c:225:6:PID_SetTunings2	5
+../Core/Src/motor_Control/PID.c:264:15:PID_SetControllerDirection	3
+../Core/Src/motor_Control/PID.c:279:15:PID_GetDirection	1
+../Core/Src/motor_Control/PID.c:285:6:PID_SetSampleTime	2
+../Core/Src/motor_Control/PID.c:305:8:PID_GetKp	1
+../Core/Src/motor_Control/PID.c:309:8:PID_GetKi	1
+../Core/Src/motor_Control/PID.c:313:8:PID_GetKd	1

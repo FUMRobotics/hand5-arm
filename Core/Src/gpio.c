@@ -62,7 +62,7 @@ void MX_GPIO_Init(void)
 
   /*Configure GPIO pins : PCPin PCPin */
   GPIO_InitStruct.Pin = Motor3_Encoder2_Pin|Motor3_Encoder1_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
@@ -70,33 +70,33 @@ void MX_GPIO_Init(void)
                            PBPin PBPin PBPin */
   GPIO_InitStruct.Pin = Motor4_Encoder1_Pin|Motor4_Encoder2_Pin|Motor5_Encoder1_Pin|Motor1_Encoder2_Pin
                           |Motor1_Encoder1_Pin|Motor2_Encoder1_Pin|Motor2_Encoder2_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pin : PtPin */
   GPIO_InitStruct.Pin = Motor5_Encoder2_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(Motor5_Encoder2_GPIO_Port, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
-  HAL_NVIC_SetPriority(EXTI0_IRQn, 1, 0);
+  HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI0_IRQn);
 
-  HAL_NVIC_SetPriority(EXTI1_IRQn, 1, 0);
+  HAL_NVIC_SetPriority(EXTI1_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI1_IRQn);
 
-  HAL_NVIC_SetPriority(EXTI2_IRQn, 1, 0);
+  HAL_NVIC_SetPriority(EXTI2_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI2_IRQn);
 
-  HAL_NVIC_SetPriority(EXTI4_IRQn, 1, 0);
+  HAL_NVIC_SetPriority(EXTI4_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI4_IRQn);
 
-  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 1, 0);
+  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
 
-  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 1, 0);
+  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
 }
@@ -107,7 +107,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	switch (GPIO_Pin) {
 	//---------------- Pinky Encoder ----------------
 		case Motor1_Encoder1_Pin:
-			switch (Fingers_Status.Pinky.Direction) {
+			switch (Fingers_Status.Pinky.Direction_Encoder) {
 				case Open:
 					Fingers_Status.Pinky.Encoder++;
 					//for remove integration error in read encoder
@@ -117,7 +117,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 				case Close:
 					Fingers_Status.Pinky.Encoder--;
 					//for remove integration error in read encoder
-					if(Fingers_Status.Pinky.Encoder>65400 || Fingers_Status.Pinky.Encoder<100)
+					if(Fingers_Status.Pinky.Encoder>65400 || Fingers_Status.Pinky.Encoder<200)
 						Fingers_Status.Pinky.Encoder=0;
 					break;
 				default:
@@ -125,7 +125,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 			}
 			break;
 		case Motor1_Encoder2_Pin:
-			switch (Fingers_Status.Pinky.Direction) {
+			switch (Fingers_Status.Pinky.Direction_Encoder) {
 				case Open:
 					Fingers_Status.Pinky.Encoder++;
 					//for remove integration error in read encoder
@@ -135,7 +135,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 				case Close:
 					Fingers_Status.Pinky.Encoder--;
 					//for remove integration error in read encoder
-					if(Fingers_Status.Pinky.Encoder>65400 || Fingers_Status.Pinky.Encoder<100)
+					if(Fingers_Status.Pinky.Encoder>65400 || Fingers_Status.Pinky.Encoder<200)
 						Fingers_Status.Pinky.Encoder=0;
 					break;
 				default:
@@ -144,7 +144,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 			break;
 	//---------------- Ring Encoder ----------------
 		case Motor2_Encoder1_Pin:
-			switch (Fingers_Status.Ring.Direction) {
+			switch (Fingers_Status.Ring.Direction_Encoder) {
 				case Open:
 					Fingers_Status.Ring.Encoder++;
 					//for remove integration error in read encoder
@@ -154,7 +154,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 				case Close:
 					Fingers_Status.Ring.Encoder--;
 					//for remove integration error in read encoder
-					if(Fingers_Status.Ring.Encoder>65400 || Fingers_Status.Ring.Encoder<100)
+					if(Fingers_Status.Ring.Encoder>65400 || Fingers_Status.Ring.Encoder<200)
 						Fingers_Status.Ring.Encoder=0;
 					break;
 				default:
@@ -162,7 +162,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 			}
 			break;
 		case Motor2_Encoder2_Pin:
-			switch (Fingers_Status.Ring.Direction) {
+			switch (Fingers_Status.Ring.Direction_Encoder) {
 				case Open:
 					Fingers_Status.Ring.Encoder++;
 					//for remove integration error in read encoder
@@ -172,7 +172,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 				case Close:
 					Fingers_Status.Ring.Encoder--;
 					//for remove integration error in read encoder
-					if(Fingers_Status.Ring.Encoder>65400 || Fingers_Status.Ring.Encoder<100)
+					if(Fingers_Status.Ring.Encoder>65400 || Fingers_Status.Ring.Encoder<200)
 						Fingers_Status.Ring.Encoder=0;
 					break;
 				default:
@@ -181,7 +181,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 			break;
 	//---------------- Middle Encoder ----------------
 		case Motor3_Encoder1_Pin:
-			switch (Fingers_Status.Middle.Direction) {
+			switch (Fingers_Status.Middle.Direction_Encoder) {
 				case Open:
 					Fingers_Status.Middle.Encoder++;
 					//for remove integration error in read encoder
@@ -191,7 +191,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 				case Close:
 					Fingers_Status.Middle.Encoder--;
 					//for remove integration error in read encoder
-					if(Fingers_Status.Middle.Encoder>65400 || Fingers_Status.Middle.Encoder<100)
+					if(Fingers_Status.Middle.Encoder>65400 || Fingers_Status.Middle.Encoder<200)
 					Fingers_Status.Middle.Encoder=0;
 					break;
 				default:
@@ -199,7 +199,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 			}
 			break;
 		case Motor3_Encoder2_Pin:
-			switch (Fingers_Status.Middle.Direction) {
+			switch (Fingers_Status.Middle.Direction_Encoder) {
 				case Open:
 					Fingers_Status.Middle.Encoder++;
 					//for remove integration error in read encoder
@@ -209,7 +209,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 				case Close:
 					Fingers_Status.Middle.Encoder--;
 					//for remove integration error in read encoder
-					if(Fingers_Status.Middle.Encoder>65400 || Fingers_Status.Middle.Encoder<100)
+					if(Fingers_Status.Middle.Encoder>65400 || Fingers_Status.Middle.Encoder<200)
 					Fingers_Status.Middle.Encoder=0;
 					break;
 				default:
@@ -218,7 +218,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 			break;
 	//---------------- Index Encoder ----------------
 		case Motor4_Encoder1_Pin:
-			switch (Fingers_Status.Index.Direction) {
+			switch (Fingers_Status.Index.Direction_Encoder) {
 				case Open:
 					Fingers_Status.Index.Encoder++;
 					//for remove integration error in read encoder
@@ -228,7 +228,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 				case Close:
 					Fingers_Status.Index.Encoder--;
 					//for remove integration error in read encoder
-					if(Fingers_Status.Index.Encoder>65400 || Fingers_Status.Index.Encoder<100)
+					if(Fingers_Status.Index.Encoder>65400 || Fingers_Status.Index.Encoder<200)
 					Fingers_Status.Index.Encoder=0;
 					break;
 				default:
@@ -236,7 +236,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 			}
 			break;
 		case Motor4_Encoder2_Pin:
-			switch (Fingers_Status.Index.Direction) {
+			switch (Fingers_Status.Index.Direction_Encoder) {
 				case Open:
 					Fingers_Status.Index.Encoder++;
 					//for remove integration error in read encoder
@@ -246,7 +246,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 				case Close:
 					Fingers_Status.Index.Encoder--;
 					//for remove integration error in read encoder
-					if(Fingers_Status.Index.Encoder>65400 || Fingers_Status.Index.Encoder<100)
+					if(Fingers_Status.Index.Encoder>65400 || Fingers_Status.Index.Encoder<200)
 					Fingers_Status.Index.Encoder=0;
 					break;
 				default:
@@ -255,14 +255,14 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 			break;
 	//---------------- Thumb Encoder ----------------
 		case Motor5_Encoder1_Pin:
-			switch (Fingers_Status.Thumb.Direction) {
+			switch (Fingers_Status.Thumb.Direction_Encoder) {
 				case Open:
 					Fingers_Status.Thumb.Encoder++;
 					break;
 				case Close:
 					Fingers_Status.Thumb.Encoder--;
 					//for remove integration error in read encoder
-					if(Fingers_Status.Thumb.Encoder>65400 || Fingers_Status.Thumb.Encoder<100)
+					if(Fingers_Status.Thumb.Encoder>65400 || Fingers_Status.Thumb.Encoder<200)
 					Fingers_Status.Thumb.Encoder=0;
 					break;
 				default:
@@ -270,14 +270,14 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 			}
 			break;
 		case Motor5_Encoder2_Pin:
-			switch (Fingers_Status.Thumb.Direction) {
+			switch (Fingers_Status.Thumb.Direction_Encoder) {
 				case Open:
 					Fingers_Status.Thumb.Encoder++;
 					break;
 				case Close:
 					Fingers_Status.Thumb.Encoder--;
 					//for remove integration error in read encoder
-					if(Fingers_Status.Thumb.Encoder>65400 || Fingers_Status.Thumb.Encoder<100)
+					if(Fingers_Status.Thumb.Encoder>65400 || Fingers_Status.Thumb.Encoder<200)
 					Fingers_Status.Thumb.Encoder=0;
 					break;
 				default:
