@@ -15,18 +15,18 @@
 #define Max_Encoder_Middle              25800
 #define Max_Encoder_Ring                24400
 #define Max_Encoder_Pinky               26100
-#define Max_Encoder_Thumb               1	 //must be measured after mechanical part fixed
+#define Max_Encoder_Thumb               4647	 //(1 encoder pulse)
 //------------- Stall Current -----------------(in 60% Speed)
 #define Max_Current_Close_Index			1950
 #define Max_Current_Close_Middle		1980
 #define Max_Current_Close_Ring			1950
 #define Max_Current_Close_Pinky			2000
-#define Max_Current_Close_Thumb			1	//must be measured after mechanical part fixed
+#define Max_Current_Close_Thumb			1520	//must be measured after mechanical part fixed
 #define Min_Current_Open_Index			1500
 #define Min_Current_Open_Middle			1600
 #define Min_Current_Open_Ring			1550
 #define Min_Current_Open_Pinky			1600
-#define Min_Current_Open_Thumb			1	//must be measured after mechanical part fixed
+#define Min_Current_Open_Thumb			1920	//must be measured after mechanical part fixed
 //-------------- enumeration -------------------
 typedef enum
 {

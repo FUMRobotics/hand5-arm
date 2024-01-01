@@ -1,5 +1,5 @@
 ../Core/Src/motor_Control/motor_Control.c:25:6:Read_Encoder	18
 ../Core/Src/motor_Control/motor_Control.c:82:6:SetMotor	19
 ../Core/Src/motor_Control/motor_Control.c:178:6:init_motor_controller	1
-../Core/Src/motor_Control/motor_Control.c:234:6:Fingers_Calibration	10
+../Core/Src/motor_Control/motor_Control.c:234:6:Fingers_Calibration	12
 ../Core/Src/motor_Control/motor_Control.c:323:6:Control_Motor	14

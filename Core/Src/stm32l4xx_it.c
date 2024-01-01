@@ -201,7 +201,7 @@ void SysTick_Handler(void)
   if(control_mode==position_mode)
   {
 	  //PID_Compute(&Fingers_Status.Thumb.PID_Struct);
-	  PID_Compute(&Fingers_Status.Index.PID_Struct);
+//	  PID_Compute(&Fingers_Status.Index.PID_Struct);
 	  PID_Compute(&Fingers_Status.Middle.PID_Struct);
 	  PID_Compute(&Fingers_Status.Ring.PID_Struct);
 	  PID_Compute(&Fingers_Status.Pinky.PID_Struct);
