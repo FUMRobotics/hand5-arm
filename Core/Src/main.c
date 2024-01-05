@@ -111,7 +111,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
 	init_motor_controller();
 	//start fingers calibration
-	//Fingers_Calibration();
+	Fingers_Calibration();
 	//feedback for end of calibration
 	HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin,1);
 
@@ -124,13 +124,13 @@ int main(void)
 
 		//------------------------------| Thumb finger |----------------------------------------
 		SetMotor(Thumb, &Fingers_Status.Thumb);
-//		Control_Motor(Thumb, &Fingers_Status.Thumb);
+		Control_Motor(Thumb, &Fingers_Status.Thumb);
 		ADC_ReadCurrent_Thumb();
 		if(Fingers_Status.Thumb.Direction_motor==Stop)
 			Read_Encoder(Thumb, &Fingers_Status.Thumb);
 		//------------------------------| Index finger |----------------------------------------
 		ADC_ReadCurrent_Index();
-//		Control_Motor(Index,&Fingers_Status.Index);
+		Control_Motor(Index,&Fingers_Status.Index);
 		SetMotor(Index, &Fingers_Status.Index);
 		if(Fingers_Status.Index.Direction_motor==Stop)
 			Read_Encoder(Index, &Fingers_Status.Index);
