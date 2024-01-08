@@ -491,7 +491,7 @@ void ADC_Select_Thumb_CH (void)
 void ADC_ReadCurrent_Thumb()
 {
 	Fingers_Status.Thumb.Current=(Fingers_Status.Thumb.Current+(0.01*ADCData[Thumb]))/1.01;
-	if(Fingers_Status.Thumb.Current>Max_Current_Close_Thumb || Fingers_Status.Thumb.Current<Min_Current_Open_Thumb)
+	if(Fingers_Status.Thumb.Current<Min_Current_Close_Thumb || Fingers_Status.Thumb.Current>Max_Current_Open_Thumb)
 		Fingers_Status.Thumb.Stuck_Finger=1;
 	else
 		Fingers_Status.Thumb.Stuck_Finger=0;

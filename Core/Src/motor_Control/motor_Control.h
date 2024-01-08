@@ -21,12 +21,12 @@
 #define Max_Current_Close_Middle		1980
 #define Max_Current_Close_Ring			1950
 #define Max_Current_Close_Pinky			2000
-#define Max_Current_Close_Thumb			1520	//must be measured after mechanical part fixed
+#define Min_Current_Close_Thumb			1520	//must be measured after mechanical part fixed
 #define Min_Current_Open_Index			1500
 #define Min_Current_Open_Middle			1600
 #define Min_Current_Open_Ring			1550
 #define Min_Current_Open_Pinky			1600
-#define Min_Current_Open_Thumb			1920	//must be measured after mechanical part fixed
+#define Max_Current_Open_Thumb			1920	//must be measured after mechanical part fixed
 //-------------- enumeration -------------------
 typedef enum
 {

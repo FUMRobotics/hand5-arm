@@ -245,20 +245,20 @@ void Fingers_Calibration(void)
 	//have mechanical problem
 
 	//------------------------------| Thumb finger |----------------------------------------
-		Fingers_Status.Thumb.Direction_motor=Open;
-		calibration_counter=0;
-		while(Fingers_Status.Thumb.Stuck_Finger==0 || calibration_counter<60)
-		{
-			Fingers_Status.Thumb.speed=60;
-			SetMotor(Thumb, &Fingers_Status.Thumb);
-			ADC_ReadCurrent_Thumb();
-		}
-		Fingers_Status.Thumb.Direction_motor=Stop;
-		Fingers_Status.Thumb.speed=0;
-		SetMotor(Thumb, &Fingers_Status.Thumb);
-		Fingers_Status.Thumb.Stuck_Finger=0;
-		Fingers_Status.Thumb.Encoder=Max_Encoder_Thumb;
-		Fingers_Status.Thumb.SetPoint=100;
+//		Fingers_Status.Thumb.Direction_motor=Open;
+//		calibration_counter=0;
+//		while(Fingers_Status.Thumb.Stuck_Finger==0 || calibration_counter<60)
+//		{
+//			Fingers_Status.Thumb.speed=100;//must be 60 but have mechanical bug
+//			SetMotor(Thumb, &Fingers_Status.Thumb);
+//			ADC_ReadCurrent_Thumb();
+//		}
+//		Fingers_Status.Thumb.Direction_motor=Stop;
+//		Fingers_Status.Thumb.speed=0;
+//		SetMotor(Thumb, &Fingers_Status.Thumb);
+//		Fingers_Status.Thumb.Stuck_Finger=0;
+//		Fingers_Status.Thumb.Encoder=Max_Encoder_Thumb;
+//		Fingers_Status.Thumb.SetPoint=100;
 	//------------------------------| Index finger |----------------------------------------
 	Fingers_Status.Index.Direction_motor=Open;
 	calibration_counter=0;
