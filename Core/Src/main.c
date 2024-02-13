@@ -121,11 +121,11 @@ int main(void)
   /* USER CODE BEGIN WHILE */
 	while (1)
 	{
-
+		Action_Motor_Video();
 		//------------------------------| Thumb finger |----------------------------------------
-////		SetMotor(Thumb, &Fingers_Status.Thumb);
+		SetMotor(Thumb, &Fingers_Status.Thumb);
 //		Control_Motor(Thumb, &Fingers_Status.Thumb);
-//		ADC_ReadCurrent_Thumb();
+		ADC_ReadCurrent_Thumb();
 //		if(Fingers_Status.Thumb.Direction_motor==Stop)
 //			Read_Encoder(Thumb, &Fingers_Status.Thumb);
 		//------------------------------| Index finger |----------------------------------------
@@ -142,48 +142,48 @@ int main(void)
 			Read_Encoder(Middle, &Fingers_Status.Middle);
 		//------------------------------| Ring finger |----------------------------------------
 		SetMotor(Ring, &Fingers_Status.Ring);
-		Control_Motor(Ring,&Fingers_Status.Ring);
+//		Control_Motor(Ring,&Fingers_Status.Ring);
 		ADC_ReadCurrent_Ring();
 		if(Fingers_Status.Ring.Direction_motor==Stop)
 			Read_Encoder(Ring, &Fingers_Status.Ring);
 		//------------------------------| Pinky finger |----------------------------------------
 		SetMotor(Pinky, &Fingers_Status.Pinky);
-		Control_Motor(Pinky,&Fingers_Status.Pinky);
+//		Control_Motor(Pinky,&Fingers_Status.Pinky);
 		ADC_ReadCurrent_Pinky();
 		if(Fingers_Status.Pinky.Direction_motor==Stop)
 			Read_Encoder(Pinky, &Fingers_Status.Pinky);
 		//------------------------------| Communication |----------------------------------------
 		if(send_data_UART)
 		{
-//			send_data_UART=0;
-//			uint16_t current_map[5];
-//			//map current pinky
-//			if(Fingers_Status.Pinky.Current<1772)
-//				current_map[Pinky]=((1772-Fingers_Status.Pinky.Current)/(1772-1288))*1000;
-//			else
-//				current_map[Pinky]=((Fingers_Status.Pinky.Current-1772)/(2298-1772))*1000;
-//			//map current ring
-//			if(Fingers_Status.Ring.Current<1781)
-//				current_map[Ring]=((1781-Fingers_Status.Ring.Current)/(1781-1264))*1000;
-//			else
-//				current_map[Ring]=((Fingers_Status.Ring.Current-1781)/(2243-1781))*1000;
-//			//map current middle
-//			if(Fingers_Status.Middle.Current<1750)
-//				current_map[Middle]=((1750-Fingers_Status.Middle.Current)/(1750-1290))*1000;
-//			else
-//				current_map[Middle]=((Fingers_Status.Middle.Current-1750)/(2291-1750))*1000;
-//			//map current index
-//			if(Fingers_Status.Index.Current<1688)
-//				current_map[Index]=((1688-Fingers_Status.Index.Current)/(1688-1226))*1000;
-//			else
-//				current_map[Index]=((Fingers_Status.Index.Current-1688)/(2239-1688))*1000;
-//			//map current thumb
-//			if(Fingers_Status.Thumb.Current<1701)
-//				current_map[Thumb]=((1701-Fingers_Status.Thumb.Current)/(1701-1233))*1000;
-//			else
-//				current_map[Thumb]=((Fingers_Status.Thumb.Current-1701)/(2279-1701))*1000;
-//			sprintf(uartTX,"{CP:%dCR:%dCM:%dCI:%dCT:%d}\n",current_map[Pinky],current_map[Ring],current_map[Middle],current_map[Index],current_map[Thumb]);
-			sprintf(uartTX,"{CP:%dCR:%dCM:%dCI:%dCT:%d}\n",Fingers_Status.Pinky.Current,Fingers_Status.Ring.Current,Fingers_Status.Middle.Current,Fingers_Status.Index.Current,Fingers_Status.Thumb.Current);
+			send_data_UART=0;
+			uint16_t current_map[5];
+			//map current pinky
+			if(Fingers_Status.Pinky.Current<1772)
+				current_map[Pinky]=((float)(1772-Fingers_Status.Pinky.Current)/(1772-1288))*1000;
+			else
+				current_map[Pinky]=((float)(Fingers_Status.Pinky.Current-1772)/(2298-1772))*1000;
+			//map current ring
+			if(Fingers_Status.Ring.Current<1781)
+				current_map[Ring]=((float)(1781-Fingers_Status.Ring.Current)/(1781-1264))*1000;
+			else
+				current_map[Ring]=((float)(Fingers_Status.Ring.Current-1781)/(2243-1781))*1000;
+			//map current middle
+			if(Fingers_Status.Middle.Current<1750)
+				current_map[Middle]=((float)(1750-Fingers_Status.Middle.Current)/(1750-1290))*1000;
+			else
+				current_map[Middle]=((float)(Fingers_Status.Middle.Current-1750)/(2291-1750))*1000;
+			//map current index
+			if(Fingers_Status.Index.Current<1688)
+				current_map[Index]=((float)(1688-Fingers_Status.Index.Current)/(1688-1226))*1000;
+			else
+				current_map[Index]=((float)(Fingers_Status.Index.Current-1688)/(2239-1688))*1000;
+			//map current thumb
+			if(Fingers_Status.Thumb.Current<1701)
+				current_map[Thumb]=((float)(1701-Fingers_Status.Thumb.Current)/(1701-1233))*1000;
+			else
+				current_map[Thumb]=((float)(Fingers_Status.Thumb.Current-1701)/(2279-1701))*1000;
+			sprintf(uartTX,"{CP:%dCR:%dCM:%dCI:%dCT:%d}\n",current_map[Pinky],current_map[Ring],current_map[Middle],current_map[Index],current_map[Thumb]);
+//			sprintf(uartTX,"{CP:%dCR:%dCM:%dCI:%dCT:%d}\n",Fingers_Status.Pinky.Current,Fingers_Status.Ring.Current,Fingers_Status.Middle.Current,Fingers_Status.Index.Current,Fingers_Status.Thumb.Current);
 			HAL_UART_Transmit(&huart4, (uint8_t*)uartTX, strlen(uartTX), 5);
 			HAL_Delay(1);
 			sprintf(uartTX,"{PP:%dPR:%dPM:%dPI:%dPT:%d}\n",((uint16_t)(Fingers_Status.Pinky.position*100)),((uint16_t)(Fingers_Status.Ring.position*100)),((uint16_t)(Fingers_Status.Middle.position*100)),((uint16_t)(Fingers_Status.Index.position*100)),((uint16_t)(Fingers_Status.Thumb.position*100)));

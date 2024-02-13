@@ -198,7 +198,7 @@ void SysTick_Handler(void)
   Fingers_Status.Ring.Current_Counter++;
   Fingers_Status.Thumb.Current_Counter++;
 
-  if(control_mode==position_mode)
+  if(control_mode==position_mode &&  EnablePID)
   {
 	  PID_Compute(&Fingers_Status.Thumb.PID_Struct);
 	  PID_Compute(&Fingers_Status.Index.PID_Struct);

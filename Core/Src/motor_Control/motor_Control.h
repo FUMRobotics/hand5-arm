@@ -83,10 +83,12 @@ extern uint8_t ManualControl;
 extern uint32_t Current_motor[6];
 extern volatile uint16_t ADCData[6];
 extern volatile uint16_t calibration_counter;
+extern _Bool EnablePID;
 //-------------- function prototype -------------------
 void Read_Encoder(Fingers_Name_Enum FingerName,Finger_Struct* FingerStruct);
 void SetMotor(Fingers_Name_Enum name,Finger_Struct*  FingerStruct);
 void init_motor_controller(void);
 void Fingers_Calibration(void);
 void Control_Motor(Fingers_Name_Enum FingerName,Finger_Struct* FingerStruct);
+void Action_Motor_Video(void);
 #endif /* SRC_MOTOR_CONTROL_MOTOR_CONTROL_H_ */

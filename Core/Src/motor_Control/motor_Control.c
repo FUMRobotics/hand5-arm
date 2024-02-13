@@ -16,6 +16,8 @@ uint32_t Current_motor[6];
 uint8_t ManualControl=0;
 volatile uint16_t ADCData[6];
 volatile uint16_t calibration_counter=0;
+_Bool EnablePID=1;
+uint8_t ActionMotor_Counter=0;
 //-------------- structure -------------------
 //-------------- enumeration -------------------
 //-------------- function -------------------
@@ -173,7 +175,7 @@ void SetMotor(Fingers_Name_Enum FingerName,Finger_Struct* FingerStruct) {
 	}
 }
 /*
- *
+ * init motor parameter
  */
 void init_motor_controller(void)
 {
@@ -230,7 +232,9 @@ void init_motor_controller(void)
 	PID_SetSampleTime(&Fingers_Status.Pinky.PID_Struct, 1);
 	PID_SetOutputLimits(&Fingers_Status.Pinky.PID_Struct, 0, 100);
 }
-
+/*
+ * calibrate all finger just in power up
+ */
 void Fingers_Calibration(void)
 {
 	//read current until stable
@@ -245,20 +249,20 @@ void Fingers_Calibration(void)
 	//have mechanical problem
 
 	//------------------------------| Thumb finger |----------------------------------------
-//		Fingers_Status.Thumb.Direction_motor=Open;
-//		calibration_counter=0;
-//		while(Fingers_Status.Thumb.Stuck_Finger==0 || calibration_counter<60)
-//		{
-//			Fingers_Status.Thumb.speed=100;//must be 60 but have mechanical bug
-//			SetMotor(Thumb, &Fingers_Status.Thumb);
-//			ADC_ReadCurrent_Thumb();
-//		}
-//		Fingers_Status.Thumb.Direction_motor=Stop;
-//		Fingers_Status.Thumb.speed=0;
-//		SetMotor(Thumb, &Fingers_Status.Thumb);
-//		Fingers_Status.Thumb.Stuck_Finger=0;
-//		Fingers_Status.Thumb.Encoder=Max_Encoder_Thumb;
-//		Fingers_Status.Thumb.SetPoint=100;
+	//		Fingers_Status.Thumb.Direction_motor=Open;
+	//		calibration_counter=0;
+	//		while(Fingers_Status.Thumb.Stuck_Finger==0 || calibration_counter<60)
+	//		{
+	//			Fingers_Status.Thumb.speed=100;//must be 60 but have mechanical bug
+	//			SetMotor(Thumb, &Fingers_Status.Thumb);
+	//			ADC_ReadCurrent_Thumb();
+	//		}
+	//		Fingers_Status.Thumb.Direction_motor=Stop;
+	//		Fingers_Status.Thumb.speed=0;
+	//		SetMotor(Thumb, &Fingers_Status.Thumb);
+	//		Fingers_Status.Thumb.Stuck_Finger=0;
+	//		Fingers_Status.Thumb.Encoder=Max_Encoder_Thumb;
+	//		Fingers_Status.Thumb.SetPoint=100;
 	//------------------------------| Index finger |----------------------------------------
 	Fingers_Status.Index.Direction_motor=Open;
 	calibration_counter=0;
@@ -320,6 +324,9 @@ void Fingers_Calibration(void)
 	Fingers_Status.Pinky.Encoder=Max_Encoder_Pinky;
 	Fingers_Status.Pinky.SetPoint=100;
 }
+/*
+ * find direction form current position and setpoint and check motor current
+ */
 void Control_Motor(Fingers_Name_Enum FingerName,Finger_Struct* FingerStruct)
 {
 	if(control_mode==position_mode)
@@ -375,5 +382,62 @@ void Control_Motor(Fingers_Name_Enum FingerName,Finger_Struct* FingerStruct)
 			}
 		}else
 			FingerStruct->Current_Counter=0;
+	}
+}
+/*
+ *  function just for video not relate to control motors
+ */
+void Action_Motor_Video(void)
+{
+	if(ActionMotor_Counter<3)
+	{
+		EnablePID=0;
+		if(		Fingers_Status.Index.Direction_motor==Stop &&\
+				Fingers_Status.Middle.Direction_motor==Stop&&\
+				Fingers_Status.Pinky.Direction_motor==Stop&&\
+				Fingers_Status.Ring.Direction_motor==Stop&&\
+				Fingers_Status.Thumb.Direction_motor==Stop)
+		{
+			switch (ActionMotor_Counter) {
+			case 0:
+				Fingers_Status.Index.speed=100;
+				Fingers_Status.Index.SetPoint=15;
+				Fingers_Status.Middle.speed=100;
+				Fingers_Status.Middle.SetPoint=15;
+				Fingers_Status.Ring.speed=100;
+				Fingers_Status.Ring.SetPoint=15;
+				Fingers_Status.Pinky.speed=100;
+				Fingers_Status.Pinky.SetPoint=15;
+				break;
+			case 1:
+				Fingers_Status.Index.speed=90;
+				Fingers_Status.Index.SetPoint=60;
+				Fingers_Status.Middle.speed=80;
+				Fingers_Status.Middle.SetPoint=60;
+				Fingers_Status.Ring.speed=70;
+				Fingers_Status.Ring.SetPoint=60;
+				Fingers_Status.Pinky.speed=60;
+				Fingers_Status.Pinky.SetPoint=60;
+
+				break;
+			case 2:
+				Fingers_Status.Index.speed=100;
+				Fingers_Status.Index.SetPoint=60;
+				Fingers_Status.Middle.speed=100;
+				Fingers_Status.Middle.SetPoint=60;
+				Fingers_Status.Ring.speed=100;
+				Fingers_Status.Ring.SetPoint=15;
+				Fingers_Status.Pinky.speed=100;
+				Fingers_Status.Pinky.SetPoint=15;
+
+				break;
+			default:
+				break;
+			}
+			ActionMotor_Counter++;
+		}
+	}else
+	{
+		EnablePID=1;
 	}
 }
